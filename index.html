@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="TravelPlan เว็บไซต์วางแผนและประเมินค่าใช้จ่ายการเดินทางไปต่างประเทศ เลือกประเทศ เลือกเมือง ดูงบประมาณ ตั๋วเครื่องบิน ที่พัก และเช็กลิสต์เอกสาร โครงงานวิทยาลัยเทคโนโลยีการจัดการขอนแก่น">
+<meta property="og:type" content="website">
+<meta property="og:title" content="TravelPlan - วางแผนและประเมินค่าใช้จ่ายเดินทางต่างประเทศ">
+<meta property="og:description" content="เลือกประเทศและเมือง คำนวณงบประมาณตามวันที่เดินทาง พร้อมเช็กลิสต์เอกสาร รองรับ 5 ภาษา">
+<meta name="twitter:card" content="summary">
+<meta name="robots" content="index, follow">
+<title>TravelPlan - วางแผนและประเมินค่าใช้จ่ายเดินทางต่างประเทศ</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;700&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf1f6;--card:#fff;--ink:#12263a;--mut:#5a6b7b;--line:#d3dee8;--acc:#0a7e8c;--sun:#f2a541;--ok:#1f8a4c;--warn:#b7791f;--bad:#c0392b;--inp:#f6f9fb;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1823;--card:#152636;--ink:#e6eef5;--mut:#94a8ba;--line:#26394b;--acc:#35b6c4;--sun:#f2a541;--ok:#4cc27f;--warn:#e0a93f;--bad:#ef7b6c;--inp:#0f1d2a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1823;--card:#152636;--ink:#e6eef5;--mut:#94a8ba;--line:#26394b;--acc:#35b6c4;--sun:#f2a541;--ok:#4cc27f;--warn:#e0a93f;--bad:#ef7b6c;--inp:#0f1d2a;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Sarabun,"Noto Sans Thai",Tahoma,sans-serif}
+h1,h2,h3{font-family:Prompt,"Noto Sans Thai",Tahoma,sans-serif;margin:0;line-height:1.3}
+.w{max-width:980px;margin:0 auto;padding:20px 16px 48px}
+header h1{font-size:2rem;font-weight:700}header p{margin:4px 0 14px;color:var(--mut)}
+.note{background:color-mix(in srgb,var(--sun) 18%,transparent);border-left:4px solid var(--sun);padding:8px 12px;border-radius:6px;font-size:.92rem;margin-bottom:16px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+nav button{font:inherit;font-weight:600;padding:8px 14px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;cursor:pointer}
+nav button[aria-selected=true]{background:var(--acc);border-color:var(--acc);color:#fff}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--sun);outline-offset:1px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+label{display:block;font-size:.88rem;color:var(--mut)}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--inp);border:1px solid var(--line);border-radius:8px;padding:7px 9px;margin-top:2px}
+.btn{font:inherit;font-weight:600;border:0;border-radius:8px;padding:8px 14px;background:var(--acc);color:#fff;cursor:pointer}
+.btn.o{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn.d{background:var(--bad)}
+.tk{display:grid;grid-template-columns:1.4fr 1fr;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);margin-bottom:16px}
+.tk-m{padding:18px;background:linear-gradient(135deg,var(--acc),#0b4f6c);color:#fff}
+.tk-s{padding:18px;border-left:2px dashed var(--line);display:flex;flex-direction:column;justify-content:center;gap:6px}
+.route{font:700 1.6rem Prompt,sans-serif;display:flex;gap:12px;align-items:center}
+.tot{font:700 2.4rem Prompt,sans-serif;line-height:1.2}.tot small{font-size:1rem;font-weight:500}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.mut{color:var(--mut)}
+.row{display:grid;grid-template-columns:minmax(120px,1.3fr) 2fr auto;gap:10px;align-items:center;padding:5px 0}
+.bar{height:10px;background:var(--line);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc)}
+.row b{font-variant-numeric:tabular-nums;text-align:right}
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;font-weight:600;font-size:.9rem;border:1px solid currentColor}
+.s-g{color:var(--ok)}.s-y{color:var(--warn)}.s-r{color:var(--bad)}
+.ck label{display:flex;gap:8px;align-items:flex-start;color:var(--ink);font-size:1rem;padding:3px 0}.ck input{width:auto;margin-top:6px}
+.ck input:checked+span{text-decoration:line-through;color:var(--mut)}
+.fr{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.fr:last-child{border:0}
+details{border:1px solid var(--line);border-radius:10px;margin-bottom:10px;background:var(--card)}
+summary{padding:10px 14px;cursor:pointer;font-weight:600}details>div{padding:0 14px 14px}
+.sec{display:none}.sec.on{display:block}
+.pg{display:none}.pg.on{display:block}
+.ubar{display:flex;justify-content:flex-end;align-items:center;gap:10px;padding:8px 16px;max-width:980px;margin:0 auto}.ubar[hidden]{display:none}
+.lgc{max-width:460px;margin:8vh auto 0}
+#lm,#reg,[hidden]{display:none!important}
+a.btn{display:inline-block;text-decoration:none}
+.pbn{height:190px;border-radius:14px;margin:8px 0 14px;display:flex;align-items:flex-end;padding:14px 18px;color:#fff;background:linear-gradient(transparent 35%,rgba(0,0,0,.65)),var(--bi,linear-gradient(135deg,#0a7e8c,#0b4f6c)) center 40%/cover}
+.pbn h2{text-shadow:0 2px 8px rgba(0,0,0,.7);animation:pgin .5s ease}
+#bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:var(--img,none) center/cover no-repeat,linear-gradient(180deg,var(--s1,#8fc4ee),var(--s2,#e3f0f8))}
+#bg.im::before{opacity:.5}
+#bg::before{content:"";position:absolute;inset:0;background:var(--bg);opacity:.62}
+#bg i{font-style:normal;position:absolute}
+#bg .pt{top:0;opacity:.8;animation:fall linear infinite}
+#bg.up .pt{animation-name:rise}
+#bg .fg{bottom:-1vh;opacity:.5;animation:bob 6s ease-in-out infinite alternate}
+#bg .cl{left:-140px;font-size:70px;opacity:.45;animation:drift 55s linear infinite}
+@keyframes fall{from{transform:translate(0,-10vh) rotate(0)}to{transform:translate(60px,112vh) rotate(360deg)}}
+@keyframes rise{from{transform:translate(0,112vh)}to{transform:translate(-40px,-12vh)}}
+@keyframes bob{to{transform:translateY(-16px)}}
+@keyframes drift{to{transform:translateX(calc(100vw + 280px))}}.tb{display:flex;gap:8px;margin-bottom:12px}.tb .btn{flex:1}
+.btn,.cc,nav button{position:relative;overflow:hidden;transition:transform .15s ease,box-shadow .2s,background-color .2s,border-color .2s}
+.btn:hover,.cc:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.18)}
+.btn:active,.cc:active,nav button:active{transform:scale(.95);box-shadow:none}
+.chip span{transition:transform .15s ease,background-color .2s,border-color .2s}.chip:active span{transform:scale(.92)}
+.chip input:checked+span,.btn.done{animation:pop .3s ease}
+@keyframes pop{50%{transform:scale(1.12)}}
+.pg.on{animation:pgin .35s ease}.sec.on{animation:pgin .3s ease}
+@keyframes pgin{from{opacity:0;transform:translateY(12px)}}
+.hero .route span:last-child{animation:fly 1.2s ease-out}
+@keyframes fly{from{transform:translateX(-140px);opacity:0}}
+.rp{position:absolute;border-radius:50%;background:currentColor;opacity:.3;transform:scale(0);animation:rp .6s ease-out forwards;pointer-events:none}
+@keyframes rp{to{transform:scale(2.6);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}.lgc .btn.lg{width:100%;text-align:center}
+.hero{min-height:calc(100vh - 90px);display:flex;flex-direction:column;justify-content:center;gap:16px;padding:32px;border-radius:18px;background:linear-gradient(150deg,#0b4f6c,#0a7e8c 70%,#f2a541 170%);color:#fff}
+.hero h1{font-size:clamp(2.6rem,9vw,4.6rem);font-weight:700}.hero p{max-width:34em;margin:0;font-size:1.1rem}
+.hero .route{font-size:2.4rem}.ln{flex:0 0 90px;border-top:3px dashed rgba(255,255,255,.7)}
+.flags{font-size:2rem;display:flex;gap:10px;flex-wrap:wrap}.hero ol{margin:0;padding-left:1.3em}
+.btn.lg{align-self:flex-start;background:var(--sun);color:#12263a;font-size:1.1rem;padding:12px 26px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:14px 0}
+.cc{font:inherit;color:var(--ink);text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:4px}
+.cc:hover{border-color:var(--acc)}.fl{font-size:2.2rem;line-height:1.2}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{display:inline-block;position:relative;color:var(--ink);cursor:pointer}.chip input{position:absolute;opacity:0}
+.chip span{display:inline-block;padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+.chip input:checked+span{background:var(--acc);border-color:var(--acc);color:#fff}.chip input:focus-visible+span{outline:3px solid var(--sun)}
+@media(max-width:640px){.tk{grid-template-columns:1fr}.tk-s{border-left:0;border-top:2px dashed var(--line)}.row{grid-template-columns:1fr auto}.row .bar{grid-column:1/3;order:3}}
+
+.chip.ph input:checked+span{width:150px;height:112px;display:flex;align-items:flex-end;padding:8px 10px;border-radius:12px;color:#fff;font-weight:600;text-shadow:0 1px 4px rgba(0,0,0,.8);background:linear-gradient(transparent 45%,rgba(0,0,0,.75)),var(--im) center 70%/cover;border-color:var(--sun);box-shadow:0 0 0 2px var(--sun);animation:phpop .55s cubic-bezier(.34,1.56,.64,1)}
+@keyframes phpop{from{transform:scale(.4);opacity:.2}to{transform:scale(1);opacity:1}}
+.chip.ph input:checked+span::after{content:"✓";position:absolute;top:8px;right:10px;background:var(--sun);color:#12263a;border-radius:50%;width:22px;height:22px;text-align:center;line-height:22px;font-size:.9rem}
+.chip.ph:hover span{transform:scale(1.03)}
+.md{position:fixed;inset:0;z-index:50;background:rgba(5,15,25,.6);display:flex;align-items:center;justify-content:center;padding:16px;animation:pgin .25s ease}
+.mc{background:var(--card);border-radius:16px;width:min(760px,100%);max-height:88vh;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px;animation:phpop .35s cubic-bezier(.34,1.56,.64,1)}
+.mh{display:flex;justify-content:space-between;align-items:center}
+.ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:8px}
+.ac{font:inherit;color:var(--ink);text-align:left;background:var(--inp);border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.ac.on{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
+.cu{display:grid;grid-template-columns:2fr 1fr auto;gap:8px;align-items:end}
+.ubar{padding:14px 16px;gap:14px}
+#who{font:600 1.25rem Prompt,Sarabun,sans-serif;display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);padding:9px 18px;border-radius:999px}
+#lo{font-size:1.15rem;font-weight:600;padding:11px 22px;background:var(--acc);color:#fff;border:0}
+
+/* ===== รีดีไซน์ใหม่ + แอนิเมชัน ===== */
+:root{--bg:#f3f0ff;--acc:#6d5efc;--sun:#ffb454;--line:#e0dcf5;--inp:#f7f5ff;--grad:linear-gradient(135deg,#6d5efc,#b04cff 48%,#ff5d8f)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c0b1f;--card:#17163a;--line:#2b2a55;--inp:#110f2c;--acc:#9a8cff;--mut:#a9a8cf}}
+:root[data-theme="dark"]{--bg:#0c0b1f;--card:#17163a;--line:#2b2a55;--inp:#110f2c;--acc:#9a8cff;--mut:#a9a8cf}
+header h1{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;animation:rise .6s both}
+.card,.tk,details,.mc{border-radius:20px}
+.card{box-shadow:0 10px 30px rgba(109,94,252,.12);transition:transform .25s,box-shadow .25s}
+#out .card:hover,#sout .card:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(109,94,252,.22)}
+.pg.on>.card,.sec.on>.card{animation:rise .55s cubic-bezier(.2,.8,.2,1) both}
+.pg.on>.card:nth-child(2),.sec.on>.card:nth-child(2){animation-delay:.08s}
+.pg.on>.card:nth-child(3),.sec.on>.card:nth-child(3){animation-delay:.16s}
+.btn{background:var(--grad);background-size:200% 200%;background-position:0 0}
+.btn:hover{background-position:100% 0}
+.btn.o{background:transparent}.btn.d{background:var(--bad)}
+.btn.lg{background:linear-gradient(135deg,#ffb454,#ff5d8f);color:#fff;animation:pulse 2.2s infinite}
+nav button{border-radius:999px;background:var(--card)}
+nav button[aria-selected=true]{background:var(--grad);border-color:transparent;color:#fff;animation:pop .35s}
+input,select,textarea{transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 4px color-mix(in srgb,var(--acc) 25%,transparent)}
+#bg::after{content:"";position:absolute;inset:-20%;pointer-events:none;background:radial-gradient(circle at 20% 30%,rgba(124,92,255,.28),transparent 40%),radial-gradient(circle at 80% 70%,rgba(255,93,143,.24),transparent 40%);animation:orb 18s ease-in-out infinite alternate}
+.hero{background:linear-gradient(135deg,#4b3fe0,#b04cff,#ff5d8f,#ffa35e);background-size:300% 300%;animation:gshift 14s ease infinite;position:relative;overflow:hidden}
+.hero>*{position:relative;z-index:1}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;filter:blur(50px);opacity:.45;background:#fff;animation:float 7s ease-in-out infinite}
+.hero::before{width:260px;height:260px;top:-70px;right:-60px}.hero::after{width:200px;height:200px;bottom:-60px;left:-40px;animation-delay:-3s}
+.hero h1{animation:rise .8s both}.hero p{animation:rise .8s .15s both}
+.hero ol li{animation:rise .6s both}.hero ol li:nth-child(1){animation-delay:.3s}.hero ol li:nth-child(2){animation-delay:.45s}.hero ol li:nth-child(3){animation-delay:.6s}
+.hero .route span:last-child{animation:flyloop 3.5s ease-in-out infinite}
+.flags span{display:inline-block;animation:wave 2.4s ease-in-out infinite;animation-delay:calc(var(--i,0)*.15s)}
+.lgc{border:2px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,var(--grad) border-box;position:relative;animation:rise .7s both}
+.lgc::before{content:"✈️";position:absolute;top:-40px;right:22px;font-size:40px;animation:float 3s ease-in-out infinite}
+.tk-m{position:relative;overflow:hidden;background:linear-gradient(135deg,#6d5efc,#b04cff,#ff5d8f,#ff9e5e);background-size:300% 300%;animation:gshift 10s ease infinite}
+.tk-m::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.28) 50%,transparent 70%);transform:translateX(-100%);animation:sweep 3.6s ease-in-out infinite;pointer-events:none}
+.tk-m .route span:nth-child(2){animation:nudge 1.6s ease-in-out infinite}
+.bar i{background:var(--grad)}
+.cc{border-radius:18px;animation:rise .5s both;animation-delay:calc(var(--i,0)*45ms)}
+.cc:hover{transform:translateY(-6px) rotate(-.6deg) scale(1.02)}
+.cc .fl{display:inline-block}.cc:hover .fl{animation:wiggle .6s}
+.chip{animation:rise .4s both;animation-delay:calc(var(--i,0)*30ms)}
+.pbn{border-radius:20px;box-shadow:0 12px 30px rgba(109,94,252,.25)}
+.ac{border-radius:14px;transition:transform .2s,box-shadow .2s,border-color .2s}.ac:hover{transform:translateY(-3px);border-color:var(--acc)}
+.md{backdrop-filter:blur(6px)}
+.ck input{accent-color:var(--acc);width:20px;height:20px}.ck input:checked+span{animation:strike .35s}
+details{transition:box-shadow .25s}details[open]{box-shadow:0 8px 24px rgba(109,94,252,.18)}details[open]>div{animation:rise .35s both}
+summary:hover{color:var(--acc)}
+.fr{transition:background .2s,transform .2s;border-radius:10px}.fr:hover{background:color-mix(in srgb,var(--acc) 8%,transparent);transform:translateX(4px)}
+#sout .fr{animation:rise .4s both}
+#who{border-color:var(--acc)}#lo{background:var(--grad)}
+.bs{position:fixed;z-index:99;pointer-events:none;font-size:20px;animation:bs .85s ease-out forwards}
+@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.98)}}
+@keyframes gshift{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+@keyframes sweep{to{transform:translateX(100%)}}
+@keyframes nudge{50%{transform:translateX(8px)}}
+@keyframes float{50%{transform:translateY(-12px)}}
+@keyframes orb{to{transform:translate(4%,6%) scale(1.15)}}
+@keyframes wave{50%{transform:translateY(-8px) rotate(8deg)}}
+@keyframes wiggle{25%{transform:rotate(-14deg) scale(1.15)}75%{transform:rotate(14deg) scale(1.15)}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,93,143,.55)}100%{box-shadow:0 0 0 18px rgba(255,93,143,0)}}
+@keyframes strike{from{transform:translateX(6px);opacity:.3}}
+@keyframes flyloop{0%{transform:translateX(-90px);opacity:0}15%,85%{opacity:1}100%{transform:translateX(30px);opacity:0}}
+@keyframes bs{to{transform:translate(var(--dx),var(--dy)) rotate(260deg) scale(.4);opacity:0}}
+.btn.o{background:var(--card);color:var(--acc);border:2px solid var(--acc);font-weight:700;padding:9px 18px;box-shadow:0 3px 10px rgba(109,94,252,.22)}
+.btn.o:hover{background:var(--grad);color:#fff;border-color:transparent}
+#brand{display:flex;align-items:center;gap:14px;max-width:980px;margin:0 auto;padding:12px 16px 4px;animation:rise .6s both}
+.bt{font:700 1.15rem/1.3 Prompt,Sarabun,sans-serif;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bsub{font-size:.85rem;color:var(--mut)}
+.lw{position:relative;display:inline-block;border-radius:50%;flex:none;line-height:0}
+.lw::before{content:"";position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(#6d5efc,#ff5d8f,#ffb454,#6d5efc);animation:spin 5s linear infinite}
+.lw::after{content:"✨";position:absolute;top:-8px;right:-8px;font-size:16px;line-height:1;animation:float 2.6s ease-in-out infinite}
+.logo{position:relative;z-index:1;width:56px;height:56px;border-radius:50%;object-fit:cover;background:#fff;border:3px solid var(--card)}
+.lbig{display:flex;justify-content:center;margin:6px 0 10px}.lbig .logo{width:96px;height:96px;border-width:4px}.lbig.lc .logo{width:84px;height:84px}
+.hero .lbig{justify-content:flex-start}
+#ft{max-width:980px;margin:12px auto 28px;padding:16px;text-align:center;font-size:.9rem;border-top:2px dashed var(--line);display:flex;flex-direction:column;gap:8px;align-items:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lgs{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:var(--card);border:2px solid var(--acc);border-radius:999px;padding:4px 12px;font-size:1.1rem;box-shadow:0 3px 10px rgba(109,94,252,.2)}
+.lgs select{width:auto;margin:0;border:0;background:transparent;font-weight:600;color:var(--ink);padding:4px 2px;font-size:1rem}
+#bar{flex-wrap:wrap}
+@media(min-width:641px){.row{grid-template-columns:minmax(120px,1.3fr) 2fr 90px}}
+</style>
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+<div id="brand"><span class="lw"><img class="logo" data-logo alt="โลโก้วิทยาลัยเทคโนโลยีการจัดการขอนแก่น"></span><div><div class="bt">วิทยาลัยเทคโนโลยีการจัดการขอนแก่น</div><div class="bsub">โครงงานเว็บไซต์ TravelPlan / อ.เมือง จ.ขอนแก่น</div></div><div class="lgs"><span>🌐</span><select id="lg" aria-label="Language"></select></div></div>
+<div class="ubar" id="bar" hidden><span id="who"></span><button class="btn o" id="lo">ออกจากระบบ</button></div>
+<div class="w pg on" id="login"><div class="card lgc"><div class="lbig lc"><span class="lw"><img class="logo" data-logo alt="โลโก้วิทยาลัยเทคโนโลยีการจัดการขอนแก่น"></span></div><h2 style="text-align:center">เข้าสู่ระบบ TravelPlan</h2>
+<p class="mut">สมาชิกจะมีทริปที่บันทึกและข้อมูลประเทศที่แก้ไขเก็บไว้ในบัญชี เปิดดูได้จากทุกเครื่อง ข้อมูลเป็นส่วนตัวเฉพาะบัญชีของคุณ</p>
+<div id="lmsg"></div>
+<div id="af"><div class="tb"><button class="btn" id="tl">เข้าสู่ระบบ</button><button class="btn o" id="tr">สมัครสมาชิก</button></div>
+<label>ชื่อผู้ใช้ (Username)<input id="un" autocomplete="username" maxlength="30" autocapitalize="none"></label>
+<label style="margin-top:10px">รหัสผ่าน (Password)<input id="pw" type="password" autocomplete="current-password"></label>
+<label id="cl" style="margin-top:10px" hidden>ยืนยันรหัสผ่าน<input id="pw2" type="password" autocomplete="new-password"></label>
+<p><button class="btn lg" id="sub">เข้าสู่ระบบ</button></p>
+<p class="mut" style="font-size:.85rem;margin:0">ทริปและข้อมูลของคุณถูกเข้ารหัสด้วยรหัสผ่านก่อนบันทึก หากลืมรหัสผ่านจะกู้คืนข้อมูลไม่ได้</p></div>
+<div id="lm"><button class="btn lg" id="lbtn">เข้าสู่ระบบด้วยบัญชี Claude</button></div>
+<div id="reg" hidden><label>ชื่อที่แสดง<input id="rn" maxlength="40"></label><p><button class="btn lg" id="rbtn">สมัครสมาชิกและเริ่มใช้งาน</button></p></div>
+<p style="margin:16px 0 0"><button class="btn o" id="gbtn">ใช้งานแบบผู้เยี่ยมชม (บันทึกในเครื่องนี้เท่านั้น)</button></p></div></div>
+<div class="w pg" id="cover"><div class="hero">
+<div class="route"><span>BKK</span><span class="ln"></span><span>✈</span></div>
+<div class="lbig"><span class="lw"><img class="logo" data-logo alt="โลโก้วิทยาลัยเทคโนโลยีการจัดการขอนแก่น"></span></div>
+<h1>TravelPlan</h1>
+<p>วางแผนเที่ยวต่างประเทศ เลือกประเทศ เลือกจังหวัดหรือเมือง แล้วดูค่าใช้จ่ายและเอกสารที่ต้องเตรียมไว้ในที่เดียว</p>
+<div class="flags" id="cf"></div>
+<ol><li>เลือกประเทศปลายทาง</li><li>เลือกจังหวัดหรือเมืองที่จะไป</li><li>ดูงบประมาณและเช็กลิสต์เอกสาร</li></ol>
+<button class="btn lg" data-go="pick">เริ่มวางแผน</button>
+</div></div>
+<div class="w pg" id="pick"><p class="mut">ขั้นที่ 1 จาก 3</p><h2>เลือกประเทศปลายทาง</h2><p class="mut" style="margin:4px 0">ราคาด้านล่างเป็นประมาณการสำหรับ 1 คน 5 วัน แบบปานกลาง ไม่ใช่ราคาจริงแบบเรียลไทม์</p><div class="pgrid" id="pgrid"></div><p><button class="btn o" data-go="cover">กลับหน้าปก</button> <button class="btn o" data-go="app">ข้ามไปหน้าวางแผน</button></p></div>
+<div class="w pg" id="prov"><p class="mut">ขั้นที่ 2 จาก 3</p><div class="pbn" id="pb"><h2 id="pt"></h2></div><p>เลือกจังหวัดหรือเมืองที่จะไป เลือกได้หลายที่</p>
+<div class="card"><div class="chips" id="pl"></div></div>
+<div class="card"><div class="g"><label>เพิ่มจังหวัด/เมืองอื่น<input id="pcu" placeholder="พิมพ์ชื่อสถานที่"></label></div><p style="margin-bottom:0"><button class="btn o" id="padd">เพิ่ม</button> <button class="btn o" id="pall">เลือกทั้งหมด</button></p></div>
+<p><button class="btn o" data-go="pick">เปลี่ยนประเทศ</button> <button class="btn" id="pgo">ต่อไป: ดูงบและเอกสาร</button></p></div>
+<div class="w pg" id="app">
+<header><h1>✈️ TravelPlan</h1><p>วางแผนและประเมินค่าใช้จ่ายสำหรับการเดินทางไปต่างประเทศ (ออกเดินทางจากกรุงเทพฯ)</p><div style="margin-bottom:14px"><button class="btn o" data-go="cover">หน้าปก</button> <button class="btn o" data-go="pick">เลือกประเทศ / จังหวัด</button></div></header>
+<div class="note">ข้อมูลนี้เป็นการประมาณการเพื่อวางแผนเบื้องต้น ไม่ใช่ราคาจริงแบบเรียลไทม์ กฎวีซ่าและเอกสารเปลี่ยนได้ ควรตรวจสอบกับสถานทูตหรือหน่วยงานทางการก่อนเดินทางทุกครั้ง</div>
+<nav role="tablist">
+<button role="tab" data-t="plan" aria-selected="true">วางแผนทริป</button>
+<button role="tab" data-t="find" aria-selected="false">งบนี้ไปไหนได้</button>
+<button role="tab" data-t="saved" aria-selected="false">ทริปที่บันทึก</button>
+<button role="tab" data-t="edit" aria-selected="false">แก้ไขข้อมูลประเทศ</button>
+</nav>
+
+<section class="sec on" id="plan">
+<div class="card"><div class="g" id="pf">
+<label>ประเทศปลายทาง<select id="dest"></select></label>
+<label>วันเดินทางไป<input id="dd" type="date"></label><label>วันเดินทางกลับ<input id="dr" type="date"></label>
+<label>จำนวนวัน (คำนวณจากวันที่ ถ้าล้างวันที่ออก กรอกเองได้)<input id="d" type="number" min="1" max="60" value="7"></label>
+<label>จำนวนคน<input id="p" type="number" min="1" max="30" value="2"></label>
+<label>รูปแบบการเดินทาง<select id="s"><option value="0">ประหยัด</option><option value="1" selected>ปานกลาง</option><option value="2">สบาย / หรู</option></select></label>
+<label>งบประมาณรวม (บาท)<input id="b" type="number" min="0" step="1000" value="50000"></label>
+<label>เงินสำรองฉุกเฉิน (%)<input id="r" type="number" min="0" max="50" value="10"></label>
+<div style="font-size:.88rem;color:var(--mut)">สายการบิน<button type="button" class="btn o" id="alb" style="width:100%;text-align:left;margin-top:2px"></button><select id="al" hidden></select></div>
+<div style="font-size:.88rem;color:var(--mut)">ที่พัก<button type="button" class="btn o" id="hob" style="width:100%;text-align:left;margin-top:2px"></button><select id="ho" hidden></select></div>
+<label style="grid-column:1/-1">เมืองที่ต้องการไป (คั่นด้วยเครื่องหมายจุลภาค)<input id="ci" placeholder="เช่น โตเกียว, โอซาก้า, เกียวโต"></label>
+</div></div>
+<div id="out"></div>
+</section>
+
+<section class="sec" id="find">
+<div class="card"><div class="g" id="ff">
+<label>งบประมาณรวม (บาท)<input id="fb" type="number" min="0" step="1000" value="30000"></label>
+<label>จำนวนวัน<input id="fd" type="number" min="1" max="60" value="5"></label>
+<label>จำนวนคน<input id="fp" type="number" min="1" max="30" value="1"></label>
+<label>รูปแบบ<select id="fs"><option value="0">ประหยัด</option><option value="1" selected>ปานกลาง</option><option value="2">สบาย / หรู</option></select></label>
+</div></div>
+<div class="card" id="fout"></div>
+</section>
+
+<section class="sec" id="saved"><div class="card" id="sout"></div></section>
+
+<section class="sec" id="edit">
+<div class="card"><p style="margin:0 0 10px">แก้ไขราคาประมาณการ สถานะวีซ่า และเอกสารของแต่ละประเทศได้เอง ข้อมูลจะถูกบันทึกไว้ในเบราว์เซอร์นี้ (หน่วยเป็นบาท)</p>
+<button class="btn" id="add">+ เพิ่มประเทศ</button> <button class="btn o" id="reset">รีเซ็ตเป็นค่าเริ่มต้น</button></div>
+<div id="eout"></div>
+</section>
+</div>
+
+<footer id="ft"><div>🎓 โครงงานเพื่อการศึกษา วิทยาลัยเทคโนโลยีการจัดการขอนแก่น อ.เมือง จ.ขอนแก่น<span id="fcr"></span></div>
+<div class="mut">ไม่แสวงหากำไร / ข้อมูลราคาเป็นค่าประมาณ ไม่ใช่ข้อมูลทางการ</div><button class="btn o" id="crb">📚 อ้างอิงและเครดิต</button></footer>
+<div class="md" id="cr" hidden><div class="mc"><div class="mh"><b style="font-size:1.2rem">📚 อ้างอิงและเครดิต</b><button class="btn o" id="crx">ปิด</button></div>
+<p style="margin:0">เว็บไซต์นี้เป็นโครงงานเพื่อการศึกษาของวิทยาลัยเทคโนโลยีการจัดการขอนแก่น ไม่แสวงหากำไร ไม่ได้เป็นตัวแทน ไม่ได้รับการรับรอง และไม่ได้เกี่ยวข้องกับผู้ให้บริการด้านการเดินทางรายใด</p>
+<div class="card" style="margin:0"><b>ผู้จัดทำ</b>
+<label>ชื่อผู้จัดทำ / รหัสนักศึกษา<input id="crn" maxlength="120" placeholder="พิมพ์ชื่อผู้จัดทำ"></label>
+<label style="margin-top:8px">อาจารย์ที่ปรึกษา<input id="cra" maxlength="80" placeholder="พิมพ์ชื่ออาจารย์ที่ปรึกษา"></label>
+<label style="margin-top:8px">เครดิตรูปภาพประกอบ (ชื่อผู้ถ่ายภาพ / แหล่งที่มา / ใบอนุญาต)<textarea id="cri" rows="3" placeholder="เช่น ภาพโอซาก้า: ชื่อผู้ถ่าย / เว็บที่มา / ใบอนุญาต"></textarea></label></div>
+<div class="card" style="margin:0"><b>แหล่งอ้างอิงภายนอก</b>
+<p class="mut" style="margin:4px 0 8px">เว็บนี้เพียงลิงก์ไปยังเว็บไซต์เหล่านี้ ไม่ได้คัดลอกเนื้อหา โลโก้ หรือราคาจากเว็บไซต์ใด ชื่อและเครื่องหมายการค้าเป็นของเจ้าของแต่ละราย ผู้ใช้ควรตรวจสอบราคาและเงื่อนไขจากเว็บไซต์ของผู้ให้บริการโดยตรงก่อนจอง</p>
+<a class="btn o" target="_blank" rel="noopener noreferrer" href="https://www.skyscanner.co.th/">Skyscanner</a> <a class="btn o" target="_blank" rel="noopener noreferrer" href="https://www.traveloka.com/th-th">Traveloka</a> <a class="btn o" target="_blank" rel="noopener noreferrer" href="https://www.booking.com/">Booking.com</a> <a class="btn o" target="_blank" rel="noopener noreferrer" href="https://www.agoda.com/">Agoda</a></div>
+<div class="card" style="margin:0"><b>ข้อมูลและส่วนประกอบอื่น</b>
+<p class="mut" style="margin:4px 0 0">ภาพประกอบเมืองทั้งหมดเป็นภาพวาดที่สร้างขึ้นเองด้วยโค้ด ไม่ได้ใช้ภาพของผู้อื่น</p>
+<p class="mut" style="margin:4px 0 0">ราคา ค่าใช้จ่าย สถานะวีซ่า และเอกสารเป็นค่าประมาณที่ผู้จัดทำกำหนดเอง ควรตรวจสอบกับสถานทูตหรือหน่วยงานทางการก่อนเดินทาง / อีโมจิเป็นอักขระ Unicode / ฟอนต์ Prompt และ Sarabun ใช้ภายใต้ SIL Open Font License ผ่าน Google Fonts / โลโก้วิทยาลัยเป็นของวิทยาลัยเทคโนโลยีการจัดการขอนแก่น</p></div>
+</div></div>
+<div class="md" id="am" hidden><div class="mc"><div class="mh"><b style="font-size:1.2rem">เลือกสายการบิน</b><button class="btn o" id="amx">ปิด</button></div>
+<input id="aq" placeholder="ค้นหาสายการบิน เช่น Thai, Japan, Emirates">
+<div class="tb" id="aty"><button class="btn" data-ty="">ทั้งหมด</button><button class="btn o" data-ty="L">ต้นทุนต่ำ</button><button class="btn o" data-ty="F">เต็มรูปแบบ</button></div>
+<div class="ag" id="ag"></div>
+<div class="cu"><label>ไม่พบสายที่ต้องการ? ระบุชื่อเอง<input id="cn" placeholder="ชื่อสายการบิน" maxlength="40"></label><label>ตัวคูณราคา<input id="cm" type="number" step="0.05" min="0.3" max="3" value="1"></label><button class="btn" id="cb">ใช้</button></div></div></div>
+<div class="md" id="hm" hidden><div class="mc"><div class="mh"><b style="font-size:1.2rem">เลือกที่พัก</b><button class="btn o" id="hmx">ปิด</button></div>
+<input id="hq" placeholder="ค้นหาที่พัก เช่น Hilton, โฮสเทล, รีสอร์ต">
+<div class="tb" id="hty"><button class="btn" data-ty="">ทั้งหมด</button><button class="btn o" data-ty="S">ประหยัด</button><button class="btn o" data-ty="M">ระดับกลาง</button><button class="btn o" data-ty="L">หรู</button></div>
+<p class="mut" style="margin:0;font-size:.85rem">ตัวคูณคิดเทียบกับราคาห้องระดับปานกลางของประเทศนั้น</p>
+<div class="ag" id="hg"></div>
+<div class="cu"><label>ไม่พบที่พักที่ต้องการ? ระบุชื่อเอง<input id="hcn" placeholder="ชื่อที่พัก" maxlength="40"></label><label>ตัวคูณราคา<input id="hcm" type="number" step="0.05" min="0.2" max="5" value="1"></label><button class="btn" id="hcb">ใช้</button></div></div></div>
+<script>
+const $=s=>document.querySelector(s),fmt=n=>Math.round(n).toLocaleString('th-TH');
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ld=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}};
+const SK={tp_t:'trips',tp_c:'countries'},wt={};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}
+ if(AUTH.mode=='member'&&AUTH.db){clearTimeout(wt[k]);wt[k]=setTimeout(()=>{syncUp()},600)}};
+const DEF=[
+{id:'jp',f:'🇯🇵',n:'ญี่ปุ่น',code:'TYO',flight:16000,hotel:[1800,3200,6500],food:[500,1000,2000],tr:600,at:400,esim:300,visa:0,ins:60,st:'g',docs:'ตั๋วขากลับ, ลงทะเบียน Visit Japan Web',note:'ผู้ถือหนังสือเดินทางไทยเข้าพักท่องเที่ยวได้ไม่เกิน 15 วันโดยไม่ต้องขอวีซ่า ตรวจเงื่อนไขล่าสุดก่อนเดินทาง'},
+{id:'kr',f:'🇰🇷',n:'เกาหลีใต้',code:'SEL',flight:12000,hotel:[1500,2800,5500],food:[450,900,1800],tr:400,at:350,esim:250,visa:0,ins:60,st:'y',docs:'K-ETA (ถ้ายังจำเป็น), ใบกรอกข้อมูลเข้าเมืองออนไลน์',note:'ตรวจสอบเงื่อนไข K-ETA และการยกเว้นล่าสุด'},
+{id:'vn',f:'🇻🇳',n:'เวียดนาม',code:'HAN',flight:6000,hotel:[600,1200,3000],food:[250,500,1200],tr:250,at:250,esim:200,visa:0,ins:40,st:'g',docs:'ตั๋วขากลับ',note:'ยกเว้นวีซ่าตามจำนวนวันที่ประเทศกำหนด'},
+{id:'my',f:'🇲🇾',n:'มาเลเซีย',code:'KUL',flight:4500,hotel:[700,1400,3200],food:[250,500,1200],tr:250,at:250,esim:150,visa:0,ins:40,st:'g',docs:'ตั๋วขากลับ, MDAC (ถ้ากำหนด)',note:'ตรวจสอบข้อกำหนดการลงทะเบียนเข้าเมืองออนไลน์'},
+{id:'sg',f:'🇸🇬',n:'สิงคโปร์',code:'SIN',flight:5500,hotel:[2200,4000,8000],food:[450,800,1800],tr:350,at:500,esim:200,visa:0,ins:50,st:'g',docs:'SG Arrival Card, ตั๋วขากลับ',note:'ค่าครองชีพสูงกว่าประเทศใกล้เคียง'},
+{id:'tw',f:'🇹🇼',n:'ไต้หวัน',code:'TPE',flight:10000,hotel:[1300,2400,5000],food:[350,700,1500],tr:300,at:300,esim:250,visa:0,ins:50,st:'y',docs:'ตั๋วขากลับ, ใบกรอกข้อมูลเข้าเมืองออนไลน์',note:'นโยบายยกเว้นวีซ่าสำหรับคนไทยอาจมีการต่ออายุเป็นช่วง ๆ ควรตรวจสอบ'},
+{id:'cn',f:'🇨🇳',n:'จีน',code:'PEK',flight:11000,hotel:[1000,2000,4500],food:[300,600,1500],tr:300,at:300,esim:400,visa:0,ins:50,st:'g',docs:'ตั๋วขากลับ, หลักฐานที่พัก',note:'ยกเว้นวีซ่าซึ่งกันและกันตามระยะเวลาที่กำหนด'},
+{id:'id',f:'🇮🇩',n:'อินโดนีเซีย (บาหลี)',code:'DPS',flight:8000,hotel:[800,1800,5000],food:[300,600,1500],tr:400,at:350,esim:250,visa:1000,ins:50,st:'y',docs:'ค่าธรรมเนียมเข้าประเทศ/ภาษีท่องเที่ยวบาหลี, ตั๋วขากลับ',note:'อาจมีค่าธรรมเนียมเข้าประเทศหรือ e-VOA'},
+{id:'hk',f:'🇭🇰',n:'ฮ่องกง',code:'HKG',flight:7500,hotel:[2000,3500,7000],food:[400,800,1800],tr:300,at:400,esim:200,visa:0,ins:50,st:'g',docs:'ตั๋วขากลับ',note:'ที่พักราคาสูง'},
+{id:'fr',f:'🇪🇺',n:'ยุโรป (เชงเก้น เช่น ฝรั่งเศส)',code:'CDG',flight:30000,hotel:[3000,5000,10000],food:[700,1400,3000],tr:500,at:600,esim:400,visa:3000,ins:150,st:'r',docs:'หลักฐานการเงิน, ใบจองที่พัก, ตารางการเดินทาง, ประกันที่คุ้มครองตามเกณฑ์เชงเก้น, นัดหมายยื่นวีซ่า',note:'ต้องยื่นวีซ่าล่วงหน้า ควรเผื่อเวลาหลายสัปดาห์'},
+{id:'au',f:'🇦🇺',n:'ออสเตรเลีย',code:'SYD',flight:20000,hotel:[2800,4800,9000],food:[700,1300,2500],tr:500,at:500,esim:300,visa:4300,ins:100,st:'r',docs:'หลักฐานการเงิน, หลักฐานการทำงาน/เรียน, แผนการเดินทาง',note:'ต้องขอวีซ่าผู้มาเยือน'}
+];
+let C=ld('tp_c')||JSON.parse(JSON.stringify(DEF)),T=ld('tp_t')||[];
+const ST={g:['🟢','ไม่ต้องขอวีซ่า'],y:['🟡','ต้องตรวจเงื่อนไข'],r:['🔴','ต้องขอวีซ่า']};
+const BASE=['หนังสือเดินทาง (อายุคงเหลือตามที่ประเทศกำหนด)','วีซ่า / การอนุญาตเข้าประเทศ (ถ้าจำเป็น)','ตั๋วเครื่องบิน','หลักฐานที่พัก','ประกันการเดินทาง','หลักฐานทางการเงิน (ถ้ากฎของประเทศกำหนด)'];
+const get=id=>C.find(c=>c.id==id);
+
+function calc(c,o){const F=fac(c,o);
+ const nights=Math.max(o.d-1,1),rooms=Math.ceil(o.p/2),m=[.5,1,1.5][o.s];
+ const it=[['✈️','ตั๋วเครื่องบิน'+(o.al?' ('+AL[o.al].n+')':''),c.flight*o.p*(o.a||1)*F.fl],
+ ['🏨','ที่พัก ('+nights+' คืน '+rooms+' ห้อง'+(o.ho?' / '+HL[o.ho].n:'')+')',(o.ho?c.hotel[1]*o.hm:c.hotel[o.s])*rooms*nights*F.hv],
+ ['🍜','อาหาร',c.food[o.s]*o.p*o.d],
+ ['🚆','เดินทางในประเทศ',c.tr*o.p*o.d+c.tr*3*o.p*(o.c-1)],
+ ['🎫','ค่าเข้าสถานที่',c.at*m*o.p*o.d],
+ ['📱','SIM / eSIM',c.esim*o.p],
+ ['🛂','ค่าวีซ่า',c.visa*o.p],
+ ['🛡️','ประกันการเดินทาง',c.ins*o.p*o.d]];
+ const sub=it.reduce((a,b)=>a+b[2],0),res=sub*o.r/100;
+ it.push(['💵','เงินสำรองฉุกเฉิน ('+o.r+'%)',res]);
+ return{it,total:sub+res,F};
+}
+const num=(id,mn)=>Math.max(mn,+$(id).value||0);
+function opts(){const D=dts();$('#d').disabled=!!D;if(D)$('#d').value=D.d;const ci=$('#ci').value.split(',').filter(x=>x.trim()).length||1;
+ return{d:num('#d',1),p:num('#p',1),s:+$('#s').value,b:num('#b',0),r:num('#r',0),c:ci,al:+$('#al').value||0,a:(AL[+$('#al').value]||AL[0]).m,ho:+$('#ho').value||0,hm:(HL[+$('#ho').value]||HL[0]).m,D:D}}
+
+function plan(){
+ const c=get($('#dest').value);
+ if(!c){$('#out').innerHTML='<div class="card mut">ยังไม่มีข้อมูลประเทศ เพิ่มได้ที่แท็บแก้ไขข้อมูลประเทศ</div>';return}
+ const o=opts(),r=calc(c,o),pp=r.total/o.p,diff=o.b-r.total,st=ST[c.st]||ST.y;if(location.hash=='#app')setBg(c.id);updAlb();updHo();
+ const v=o.b>0?(diff>=0?'<b class="ok">งบเพียงพอ เหลืออีก '+fmt(diff)+' บาท</b>':'<b class="bad">งบไม่พอ ควรเพิ่มอีก '+fmt(-diff)+' บาท</b>'):'<span class="mut">ยังไม่ได้ใส่งบประมาณ</span>';
+ const docs=BASE.concat(String(c.docs||'').split(',').map(x=>x.trim()).filter(Boolean));
+ $('#out').innerHTML=
+ '<div class="tk"><div class="tk-m"><div class="route"><span>BKK</span><span>✈</span><span>'+esc(c.code||'---')+'</span></div>'+
+ '<div>'+esc(c.f)+' '+esc(c.n)+' / '+o.d+' วัน / '+o.p+' คน / '+o.c+' เมือง'+(o.al?' / '+esc(AL[o.al].n):'')+'</div>'+
+ '<div class="tot">'+fmt(r.total)+' <small>บาท</small></div><div>เฉลี่ยต่อคน '+fmt(pp)+' บาท</div></div>'+
+ '<div class="tk-s"><div>งบของคุณ '+fmt(o.b)+' บาท</div><div>'+v+'</div><div><button class="btn" id="save">บันทึกทริปนี้</button></div>'+(c.code?'<div><a class="btn o" target="_blank" rel="noopener noreferrer" href="https://www.skyscanner.co.th/transport/flights/bkk/'+encodeURIComponent(c.code.toLowerCase())+'/'+(o.D?ys(o.D.A)+'/'+ys(o.D.B)+'/':'')+'?adultsv2='+o.p+'">ดูราคาตั๋วจริงบน Skyscanner</a> <a class="btn o" target="_blank" rel="noopener noreferrer" href="'+tvFlight(c,o)+'">ดูบน Traveloka</a><div class="mut" style="font-size:.8rem;margin-top:4px">ราคาในหน้านี้เป็นค่าประมาณ แก้ราคาตั๋วได้ที่แท็บแก้ไขข้อมูล</div></div>':'')+'</div></div>'+
+ (o.D?'<div class="card"><h3>📅 ปรับราคาตามวันที่เดินทาง</h3><p style="margin:6px 0 0">'+fd(o.D.A)+' ถึง '+fd(o.D.B)+' ('+o.D.d+' วัน '+Math.max(o.D.d-1,0)+' คืน) '+(r.F.n<0?'<b class="bad">วันเดินทางผ่านไปแล้ว</b>':'อีก '+r.F.n+' วันจะถึงวันเดินทาง')+'</p><p class="mut" style="margin:4px 0 0">ตั๋วเครื่องบิน ×'+r.F.fl.toFixed(2)+' (ฤดูกาล ×'+r.F.sn.toFixed(2)+(r.F.pk>1?', ช่วงเทศกาล ×'+r.F.pk:'')+', จองล่วงหน้า ×'+r.F.ld+') / ที่พัก ×'+r.F.hv.toFixed(2)+'</p></div>':'')+
+ hotelCard(c,o,r)+'<div class="card"><h3>ค่าใช้จ่ายโดยประมาณ</h3>'+r.it.map(x=>'<div class="row"><span>'+x[0]+' '+esc(x[1])+'</span><span class="bar"><i style="width:'+(x[2]/r.total*100).toFixed(1)+'%"></i></span><b>'+fmt(x[2])+'</b></div>').join('')+'</div>'+
+ '<div class="card ck"><h3>เอกสารที่ควรตรวจสอบ <span class="badge s-'+c.st+'">'+st[0]+' '+st[1]+'</span></h3>'+
+ (c.note?'<p class="mut" style="margin:6px 0">'+esc(c.note)+'</p>':'')+
+ docs.map(x=>'<label><input type="checkbox"><span>'+esc(x)+'</span></label>').join('')+
+ '<p class="mut" style="font-size:.88rem;margin-bottom:0">ข้อมูลสำหรับวางแผนเบื้องต้น โปรดตรวจสอบข้อกำหนดล่าสุดจากสถานทูตหรือหน่วยงานทางการ</p></div>';
+ cnt();$('#save').onclick=()=>{T.unshift({id:Date.now(),dest:c.id,ci:$('#ci').value,d:o.d,p:o.p,s:o.s,b:o.b,r:o.r,al:o.al,ho:o.ho,dd:$('#dd').value,dr:$('#dr').value,total:r.total,name:c.f+' '+c.n+' '+o.d+' วัน '+o.p+' คน'});sv('tp_t',T);saved();$('#save').textContent='บันทึกแล้ว';$('#save').classList.add('done')};
+}
+
+function find(){
+ const o={d:num('#fd',1),p:num('#fp',1),s:+$('#fs').value,r:10,c:1},b=num('#fb',0);
+ const L=C.map(c=>({c,t:calc(c,o).total})).sort((a,b)=>a.t-b.t),mx=Math.max(...L.map(x=>x.t),b,1);
+ $('#fout').innerHTML='<h3>ประเทศที่งบ '+fmt(b)+' บาท / '+o.d+' วัน / '+o.p+' คน ไปได้</h3><p class="mut" style="margin-top:2px">รวมเงินสำรอง 10% ค่าใช้จ่ายเป็นประมาณการ ไม่ใช่ราคาจริงแบบเรียลไทม์</p>'+
+ (L.map(x=>{const ok=x.t<=b,s=ST[x.c.st]||ST.y;return '<div class="fr"><span style="font-size:1.6rem">'+esc(x.c.f)+'</span><div><b>'+esc(x.c.n)+'</b> <span class="s-'+x.c.st+'" title="'+s[1]+'">'+s[0]+' '+s[1]+'</span><div class="bar"><i style="width:'+(x.t/mx*100)+'%;background:var(--'+(ok?'ok':'bad')+')"></i></div></div><div style="text-align:right"><b>'+fmt(x.t)+'</b><div class="'+(ok?'ok':'bad')+'">'+(ok?'อยู่ในงบ':'เกินงบ '+fmt(x.t-b))+'</div></div></div>'}).join('')||'<p>ไม่มีข้อมูลประเทศ</p>');
+}
+
+function saved(){
+ $('#sout').innerHTML=T.length?'<h3>ทริปที่บันทึกไว้</h3>'+T.map(t=>'<div class="fr"><span>🧳</span><div><b>'+esc(t.name)+'</b><div class="mut">ประมาณ '+fmt(t.total)+' บาท / งบ '+fmt(t.b)+' บาท</div></div><div><button class="btn o" data-ld="'+t.id+'">เปิด</button> <button class="btn o" data-rm="'+t.id+'">ลบ</button></div></div>').join(''):'<p class="mut" style="margin:0">ยังไม่มีทริปที่บันทึก ไปที่แท็บวางแผนทริป แล้วกดบันทึกทริปนี้</p>';
+}
+
+const FS=[['flight','ตั๋วเครื่องบิน/คน'],['tr','เดินทางในประเทศ/คน/วัน'],['at','ค่าเข้าสถานที่/คน/วัน'],['esim','eSIM/คน'],['visa','ค่าวีซ่า/คน'],['ins','ประกัน/คน/วัน']];
+const LV=['ประหยัด','ปานกลาง','หรู'];
+function edit(){
+ $('#eout').innerHTML=C.map((c,i)=>'<details><summary>'+esc(c.f)+' '+esc(c.n)+'</summary><div>'+
+ '<div class="g"><label>ธง/อีโมจิ<input data-i="'+i+'" data-k="f" value="'+esc(c.f)+'"></label><label>ชื่อประเทศ<input data-i="'+i+'" data-k="n" value="'+esc(c.n)+'"></label><label>รหัสสนามบิน<input data-i="'+i+'" data-k="code" value="'+esc(c.code)+'"></label>'+
+ '<label>สถานะวีซ่า<select data-i="'+i+'" data-k="st">'+Object.keys(ST).map(k=>'<option value="'+k+'"'+(c.st==k?' selected':'')+'>'+ST[k][0]+' '+ST[k][1]+'</option>').join('')+'</select></label></div>'+
+ '<div class="g" style="margin-top:10px">'+FS.map(f=>'<label>'+f[1]+'<input type="number" min="0" data-i="'+i+'" data-k="'+f[0]+'" value="'+c[f[0]]+'"></label>').join('')+
+ [0,1,2].map(j=>'<label>ที่พัก/ห้อง/คืน ('+LV[j]+')<input type="number" min="0" data-i="'+i+'" data-k="hotel" data-j="'+j+'" value="'+c.hotel[j]+'"></label>').join('')+
+ [0,1,2].map(j=>'<label>อาหาร/คน/วัน ('+LV[j]+')<input type="number" min="0" data-i="'+i+'" data-k="food" data-j="'+j+'" value="'+c.food[j]+'"></label>').join('')+'</div>'+
+ '<label style="margin-top:10px">จังหวัด/เมืองที่ให้เลือก (คั่นด้วยเครื่องหมายจุลภาค)<textarea rows="2" data-i="'+i+'" data-k="pv">'+esc(typeof c.pv=='string'?c.pv:(PV[c.id]||[]).join(', '))+'</textarea></label>'+
+ '<label style="margin-top:10px">เอกสารเพิ่มเติม (คั่นด้วยเครื่องหมายจุลภาค)<textarea rows="2" data-i="'+i+'" data-k="docs">'+esc(c.docs)+'</textarea></label>'+
+ '<label style="margin-top:10px">หมายเหตุ<textarea rows="2" data-i="'+i+'" data-k="note">'+esc(c.note)+'</textarea></label>'+
+ '<p><button class="btn d" data-del="'+i+'">ลบประเทศนี้</button></p></div></details>').join('');
+}
+function sel(){
+ const cur=$('#dest').value;
+ $('#dest').innerHTML=C.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.f)+' '+esc(c.n)+'</option>').join('');
+ if(get(cur))$('#dest').value=cur;
+}
+function all(){sel();plan();find();pick();}
+
+document.addEventListener('click',e=>{
+ const t=e.target.closest('button');if(!t)return;
+ if(t.dataset.t){document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-selected',b==t));document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('on',s.id==t.dataset.t));}
+ if(t.dataset.del!==undefined){if(confirm('ลบประเทศนี้ใช่หรือไม่?')){C.splice(+t.dataset.del,1);sv('tp_c',C);edit();all()}}
+ if(t.dataset.rm){T=T.filter(x=>x.id!=t.dataset.rm);sv('tp_t',T);saved()}
+ if(t.dataset.ld){const x=T.find(y=>y.id==t.dataset.ld);if(!x)return;if(get(x.dest))$('#dest').value=x.dest;$('#ci').value=x.ci;$('#d').value=x.d;$('#p').value=x.p;$('#s').value=x.s;$('#b').value=x.b;$('#r').value=x.r;$('#al').value=x.al||0;$('#ho').value=x.ho||0;$('#dd').value=x.dd||'';$('#dr').value=x.dr||'';plan();document.querySelector('[data-t=plan]').click()}
+});
+$('#add').onclick=()=>{C.push({id:'c'+Date.now(),f:'🏳️',n:'ประเทศใหม่',code:'',flight:10000,hotel:[1000,2000,4000],food:[300,600,1200],tr:300,at:300,esim:200,visa:0,ins:50,st:'y',docs:'',note:''});sv('tp_c',C);edit();all();document.querySelector('#eout details:last-child').open=true};
+$('#reset').onclick=()=>{if(confirm('รีเซ็ตข้อมูลประเทศทั้งหมดเป็นค่าเริ่มต้น?')){C=JSON.parse(JSON.stringify(DEF));sv('tp_c',C);edit();all()}};
+$('#eout').addEventListener('input',e=>{
+ const d=e.target.dataset;if(d.i===undefined)return;const c=C[+d.i],v=e.target.type=='number'?Math.max(0,+e.target.value||0):e.target.value;
+ if(d.j!==undefined)c[d.k][+d.j]=v;else c[d.k]=v;sv('tp_c',C);plan();find();
+});
+$('#eout').addEventListener('change',e=>{if(e.target.dataset.i!==undefined){all();if(['n','f'].includes(e.target.dataset.k))e.target.closest('details').querySelector('summary').textContent=C[+e.target.dataset.i].f+' '+C[+e.target.dataset.i].n}});
+$('#pf').addEventListener('input',plan);$('#ff').addEventListener('input',find);
+const PV={jp:['โตเกียว','โอซาก้า','เกียวโต','นารา','นาโกย่า','ฟุกุโอกะ','ฮอกไกโด (ซัปโปโร)','โอกินาว่า','ฮิโรชิม่า'],kr:['โซล','ปูซาน','เชจู','อินช็อน','แทกู','คังนึง'],vn:['ฮานอย','โฮจิมินห์','ดานัง','ฮอยอัน','ฮาลอง','ดาลัด','เว้','นาตรัง'],my:['กัวลาลัมเปอร์','ปีนัง','มะละกา','ลังกาวี','โกตาคินาบาลู','ยะโฮร์บาห์รู'],sg:['มารีน่าเบย์','เซ็นโตซา','ไชน่าทาวน์','ลิตเติ้ลอินเดีย','ไนท์ซาฟารี'],tw:['ไทเป','ไทจง','ไถหนาน','เกาสง','ฮวาเหลียน','จิ่วเฟิ่น'],cn:['ปักกิ่ง','เซี่ยงไฮ้','เฉิงตู','ซีอาน','กวางโจว','คุนหมิง','ฮาร์บิน','จางเจียเจี้ย'],id:['กูตา/เซมีนยัก','อูบุด','นูซาเปอนิดา','ยอร์กยาการ์ตา','จาการ์ตา','ลอมบอก'],hk:['เกาะฮ่องกง','เกาลูน','ลันเตา (ดิสนีย์แลนด์)','มาเก๊า'],fr:['ปารีส','นีซ','ลียง','มาร์เซย','สตราสบูร์ก','โรม','บาร์เซโลนา','อัมสเตอร์ดัม','ซูริก'],au:['ซิดนีย์','เมลเบิร์น','บริสเบน','โกลด์โคสต์','เพิร์ธ','แคนส์']};
+const pvs=c=>typeof c.pv=='string'?c.pv.split(',').map(x=>x.trim()).filter(Boolean):(PV[c.id]||[]);
+let sel1=null,chosen=[];
+function pick(){
+ $('#cf').innerHTML=C.map(c=>'<span title="'+esc(c.n)+'">'+esc(c.f)+'</span>').join('');
+ $('#pgrid').innerHTML=C.map(c=>{const s=ST[c.st]||ST.y,t=calc(c,{d:5,p:1,s:1,r:10,c:1}).total;return '<button class="cc" data-pc="'+esc(c.id)+'"><span class="fl">'+esc(c.f)+'</span><b>'+esc(c.n)+'</b><span class="s-'+c.st+'">'+s[0]+' '+s[1]+'</span><span class="mut">ประมาณ '+fmt(t)+' บาท/คน</span></button>'}).join('');
+}
+function prov(){
+ const c=get(sel1);if(!c){location.hash='pick';return}
+ $('#pt').textContent=c.f+' '+c.n;{const z=SC[c.id]||SC.def;$('#pb').style.setProperty('--bi',z.img?'url('+z.img+')':'linear-gradient(135deg,'+z.s[0]+','+z.s[1]+')')}
+ const L=pvs(c),A=L.concat(chosen.filter(x=>!L.includes(x)));
+ $('#pl').innerHTML=A.length?A.map(x=>'<label class="chip'+(PH[x]?' ph':'')+'"'+(PH[x]?' style="--im:url('+PH[x]+')"':'')+'><input type="checkbox" value="'+esc(x)+'"'+(chosen.includes(x)?' checked':'')+'><span>'+esc(x)+'</span></label>').join(''):'<span class="mut">ยังไม่มีรายชื่อ พิมพ์เพิ่มด้านล่าง หรือเพิ่มในแท็บแก้ไขข้อมูลประเทศ</span>';
+}
+function show(){
+ let v=location.hash.slice(1);if(!['cover','pick','prov','app'].includes(v))v='cover';if(!AUTH.mode)v='login';
+ if(v=='prov'&&!get(sel1)){v='pick'}
+ setBg(v=='prov'?sel1:v=='app'?$('#dest').value:'def');if(v=='pick')pick();if(v=='prov')prov();
+ document.querySelectorAll('.pg').forEach(p=>p.classList.toggle('on',p.id==v));window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',show);
+document.addEventListener('pointerdown',e=>{const b=e.target.closest('.btn,.cc,nav button');if(!b)return;const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height),s=document.createElement('span');s.className='rp';s.style.cssText='width:'+d+'px;height:'+d+'px;left:'+(e.clientX-r.left-d/2)+'px;top:'+(e.clientY-r.top-d/2)+'px';b.appendChild(s);setTimeout(()=>s.remove(),650)});
+document.addEventListener('click',e=>{const t=e.target.closest('[data-go],[data-pc]');if(!t)return;if(t.dataset.pc){sel1=t.dataset.pc;chosen=[];location.hash='prov'}else location.hash=t.dataset.go});
+$('#pl').addEventListener('change',()=>{chosen=[...document.querySelectorAll('#pl input:checked')].map(i=>i.value)});
+$('#padd').onclick=()=>{const v=$('#pcu').value.trim();if(v&&!chosen.includes(v))chosen.push(v);$('#pcu').value='';prov()};
+$('#pall').onclick=()=>{chosen=pvs(get(sel1)).slice();prov()};
+$('#pgo').onclick=()=>{$('#dest').value=sel1;$('#ci').value=chosen.join(', ');plan();document.querySelector('[data-t=plan]').click();location.hash='app'};
+const AUTH={mode:null,id:null,name:'',db:null,u:null};
+const pref=()=>AUTH.db.collection('data/users/'+AUTH.id);
+const lmsg=m=>{$('#lmsg').innerHTML=m?'<div class="note">'+m+'</div>':''};
+async function cap(){try{if(!window.claude)return;AUTH.u=await claude.use('user');AUTH.db=await claude.use('db')}catch(e){}}
+async function tryLogin(auto){
+ await cap();
+ if(!AUTH.db||!AUTH.u){if(!auto)lmsg('ระบบสมาชิกใช้ได้เมื่อเปิดหน้านี้ผ่าน claude.ai และเข้าสู่ระบบบัญชี Claude แล้ว หรือเลือกใช้งานแบบผู้เยี่ยมชม');return}
+ try{
+  AUTH.id=await AUTH.u.id();if(!AUTH.id)throw 0;
+  const s=await pref().doc('profile').get();
+  if(s.exists){AUTH.name=s.data().name||'สมาชิก';await enter()}
+  else if(!auto){let n='';try{n=await AUTH.u.name()}catch(e){}$('#rn').value=n||'';$('#reg').hidden=false;$('#lm').hidden=true}
+ }catch(e){if(!auto)lmsg('เข้าสู่ระบบไม่สำเร็จ ลองใหม่อีกครั้ง หรือใช้งานแบบผู้เยี่ยมชม')}
+}
+async function enter(){
+ AUTH.mode='member';
+ try{
+  const a=await pref().doc('trips').get(),b=await pref().doc('countries').get();
+  if(a.exists&&Array.isArray(a.data().list))T=a.data().list;else if(T.length)sv('tp_t',T);
+  if(b.exists&&Array.isArray(b.data().list)&&b.data().list.length)C=b.data().list;
+ }catch(e){}
+ ready();
+}
+function ready(){
+ try{localStorage.removeItem('tp_out')}catch(e){}
+ $('#bar').hidden=false;$('#who').textContent='👤 '+(AUTH.mode=='member'?AUTH.name+' (สมาชิก)':'ผู้เยี่ยมชม');
+ lmsg('');all();saved();edit();location.hash='cover';show();
+}
+function logout(){
+ AUTH.mode=null;AUTH.id=null;
+ try{localStorage.setItem('tp_out','1');localStorage.removeItem('tp_c');localStorage.removeItem('tp_t')}catch(e){}
+ C=JSON.parse(JSON.stringify(DEF));T=[];$('#bar').hidden=true;$('#reg').hidden=true;$('#lm').hidden=false;
+ all();saved();edit();location.hash='login';show();
+}
+$('#lbtn').onclick=()=>{lmsg('');tryLogin(false)};
+$('#rbtn').onclick=async()=>{const n=$('#rn').value.trim()||'สมาชิก';try{await pref().doc('profile').set({name:n,joined:Date.now()});AUTH.name=n;await enter()}catch(e){lmsg('สมัครสมาชิกไม่สำเร็จ ลองใหม่อีกครั้ง')}};
+$('#gbtn').onclick=()=>{AUTH.mode='guest';ready()};
+$('#lo').onclick=logout;
+const te=new TextEncoder(),b64=b=>btoa(String.fromCharCode(...new Uint8Array(b))),ub=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const rnd=n=>b64(crypto.getRandomValues(new Uint8Array(n)));
+const base=pw=>crypto.subtle.importKey('raw',te.encode(pw),'PBKDF2',false,['deriveBits','deriveKey']);
+const pbk=(s)=>({name:'PBKDF2',salt:ub(s),iterations:210000,hash:'SHA-256'});
+async function ver(pw,s){const k=await base(pw);return b64(await crypto.subtle.deriveBits(pbk(s),k,256))}
+async function dk(pw,s){const k=await base(pw);return crypto.subtle.deriveKey(pbk(s),k,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function encJ(o){const iv=crypto.getRandomValues(new Uint8Array(12));return{iv:b64(iv),ct:b64(await crypto.subtle.encrypt({name:'AES-GCM',iv},AUTH.key,te.encode(JSON.stringify(o))))}}
+async function decJ(o){return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(o.iv)},AUTH.key,ub(o.ct))))}
+async function syncUp(){if(AUTH.mode!='member'||!AUTH.key||!AUTH.db)return;try{await AUTH.db.collection('vault').doc(AUTH.id).set(await encJ({t:T,c:C}))}catch(e){}}
+async function loadVault(){const s=await AUTH.db.collection('vault').doc(AUTH.id).get();if(!s.exists)return;try{const o=await decJ(s.data());if(Array.isArray(o.t))T=o.t;if(Array.isArray(o.c)&&o.c.length)C=o.c}catch(e){lmsg('อ่านข้อมูลของบัญชีนี้ไม่สำเร็จ')}}
+async function tryLogin(){}
+function logout(){
+ AUTH.mode=null;AUTH.id=null;AUTH.key=null;
+ try{localStorage.setItem('tp_out','1');localStorage.removeItem('tp_c');localStorage.removeItem('tp_t')}catch(e){}
+ C=JSON.parse(JSON.stringify(DEF));T=[];$('#bar').hidden=true;$('#pw').value='';
+ all();saved();edit();location.hash='login';show();
+}
+let regMode=false;
+function setMode(r){regMode=r;$('#tl').className='btn'+(r?' o':'');$('#tr').className='btn'+(r?'':' o');$('#cl').hidden=!r;$('#sub').textContent=r?'สมัครสมาชิก':'เข้าสู่ระบบ';$('#pw').autocomplete=r?'new-password':'current-password';lmsg('')}
+$('#tl').onclick=()=>setMode(false);$('#tr').onclick=()=>setMode(true);
+$('#sub').onclick=async()=>{
+ const u=$('#un').value.trim().toLowerCase(),p=$('#pw').value;
+ if(!/^[a-z0-9_.-]{3,30}$/.test(u))return lmsg('Username ใช้ได้เฉพาะ a-z, 0-9, _ . - ความยาว 3-30 ตัวอักษร');
+ if(p.length<8)return lmsg('รหัสผ่านต้องยาวอย่างน้อย 8 ตัวอักษร');
+ if(regMode&&p!==$('#pw2').value)return lmsg('รหัสผ่านทั้งสองช่องไม่ตรงกัน');
+ await cap();
+ if(!AUTH.db)return lmsg('ระบบสมาชิกใช้ได้เมื่อเปิดผ่าน claude.ai และเข้าสู่ระบบบัญชี Claude แล้ว หรือเลือกใช้งานแบบผู้เยี่ยมชม');
+ $('#sub').disabled=true;
+ try{
+  const ref=AUTH.db.collection('accounts').doc(u),s=await ref.get();
+  if(regMode){
+   if(s.exists)return lmsg('Username นี้ถูกใช้แล้ว');
+   const s1=rnd(16),s2=rnd(16);
+   await ref.set({s1,s2,v:await ver(p,s1),joined:Date.now()});
+   AUTH.key=await dk(p,s2);AUTH.id=u;AUTH.name=u;AUTH.mode='member';
+   await syncUp();
+  }else{
+   const d=s.exists?s.data():null;
+   if(!d||await ver(p,d.s1)!==d.v)return lmsg('Username หรือรหัสผ่านไม่ถูกต้อง');
+   AUTH.key=await dk(p,d.s2);AUTH.id=u;AUTH.name=u;AUTH.mode='member';
+   await loadVault();
+  }
+  $('#pw').value='';$('#pw2').value='';ready();
+ }catch(e){AUTH.mode=null;lmsg('ดำเนินการไม่สำเร็จ อาจไม่มีสิทธิ์บันทึกข้อมูลในหน้านี้ ลองใหม่อีกครั้ง หรือใช้งานแบบผู้เยี่ยมชม')}
+ finally{$('#sub').disabled=false}
+};
+$('#lo').onclick=logout;
+const SC={def:{s:['#8fc4ee','#e3f0f8'],p:['✈️','☁️'],f:['🌍']},
+jp:{s:['#f7b9cc','#9cc9ff'],p:['🌸','🌸','🍃'],f:['🗻','🏯']},
+kr:{s:['#f4c6a8','#a9c7f5'],p:['🌸','🍂'],f:['🏯','🏔️']},
+vn:{s:['#ffd48a','#8fd3c1'],p:['🏮','✨'],f:['🛶','⛰️'],up:1},
+my:{s:['#ffb27a','#7fb7e6'],p:['✨','🌺'],f:['🕌','🏙️'],up:1},
+sg:{s:['#ffc27a','#7aa8ff'],p:['✨','🌿'],f:['🌆','🦁'],up:1},
+tw:{s:['#ffb86b','#8aa6e6'],p:['🏮','✨'],f:['🏙️','🧋'],up:1},
+cn:{s:['#ff9e8a','#f7d58a'],p:['🏮','🧧'],f:['🏯','🐉'],up:1},
+id:{s:['#ffd58a','#6fd0c8'],p:['🌺','🦋'],f:['🛕','🌴']},
+hk:{s:['#7f9ee6','#d9a7e6'],p:['✨','⭐'],f:['🏙️','🚋'],up:1},
+fr:{s:['#a9c4f2','#f2d4e0'],p:['🍃','✨'],f:['🗼','🥐']},
+au:{s:['#8fd6f2','#f7d79a'],p:['🦋','🌼'],f:['🏖️','🦘']}};
+const PH={};
+const AD=['🇹🇭|Thai Airways|F|1.15','🇹🇭|Bangkok Airways|F|1.1','🇹🇭|Thai AirAsia|L|0.8','🇹🇭|Thai AirAsia X|L|0.85','🇹🇭|Thai Lion Air|L|0.8','🇹🇭|Thai VietJet Air|L|0.8','🇹🇭|Nok Air|L|0.8',
+'🇯🇵|Japan Airlines (JAL)|F|1.25','🇯🇵|ANA|F|1.25','🇯🇵|Peach|L|0.85','🇯🇵|ZIPAIR Tokyo|L|0.85','🇯🇵|Jetstar Japan|L|0.85',
+'🇰🇷|Korean Air|F|1.2','🇰🇷|Asiana Airlines|F|1.15','🇰🇷|Jeju Air|L|0.85','🇰🇷|T’way Air|L|0.85','🇰🇷|Jin Air|L|0.85','🇰🇷|Air Busan|L|0.85',
+'🇨🇳|Air China|F|1.1','🇨🇳|China Eastern|F|1.05','🇨🇳|China Southern|F|1.05','🇨🇳|Hainan Airlines|F|1.05','🇨🇳|Spring Airlines|L|0.8',
+'🇭🇰|Cathay Pacific|F|1.25','🇭🇰|HK Express|L|0.85','🇹🇼|EVA Air|F|1.2','🇹🇼|China Airlines|F|1.15','🇹🇼|STARLUX Airlines|F|1.25','🇹🇼|Tigerair Taiwan|L|0.85',
+'🇸🇬|Singapore Airlines|F|1.3','🇸🇬|Scoot|L|0.85','🇸🇬|Jetstar Asia|L|0.85',
+'🇲🇾|Malaysia Airlines|F|1.15','🇲🇾|AirAsia|L|0.8','🇲🇾|AirAsia X|L|0.85','🇮🇩|Garuda Indonesia|F|1.15','🇮🇩|Lion Air|L|0.8','🇮🇩|Citilink|L|0.8','🇮🇩|Indonesia AirAsia|L|0.8',
+'🇻🇳|Vietnam Airlines|F|1.1','🇻🇳|VietJet Air|L|0.8','🇻🇳|Bamboo Airways|F|1.05','🇻🇳|Vietravel Airlines|L|0.8',
+'🇵🇭|Philippine Airlines|F|1.15','🇵🇭|Cebu Pacific|L|0.8','🇰🇭|Cambodia Angkor Air|F|1','🇱🇦|Lao Airlines|F|1',
+'🇮🇳|Air India|F|1.1','🇮🇳|IndiGo|L|0.85','🇱🇰|SriLankan Airlines|F|1.1',
+'🇦🇪|Emirates|F|1.3','🇦🇪|Etihad Airways|F|1.25','🇶🇦|Qatar Airways|F|1.3','🇹🇷|Turkish Airlines|F|1.2','🇴🇲|Oman Air|F|1.15','🇧🇭|Gulf Air|F|1.15',
+'🇬🇧|British Airways|F|1.35','🇫🇷|Air France|F|1.35','🇩🇪|Lufthansa|F|1.35','🇨🇭|Swiss|F|1.4','🇳🇱|KLM|F|1.3','🇫🇮|Finnair|F|1.25','🇸🇪|SAS|F|1.3','🇦🇹|Austrian Airlines|F|1.3',
+'🇦🇺|Qantas|F|1.3','🇦🇺|Virgin Australia|F|1.2','🇦🇺|Jetstar|L|0.85','🇳🇿|Air New Zealand|F|1.3'];
+const AL=[{f:'🌐',n:'ไม่ระบุสายการบิน',t:'',m:1}].concat(AD.map(x=>{const a=x.split('|');return{f:a[0],n:a[1],t:a[2],m:+a[3]}}));
+const TL={'':'ใช้ราคาประมาณเดิม',L:'ต้นทุนต่ำ',F:'เต็มรูปแบบ',C:'ระบุเอง'};
+let aty='';
+function alOpts(){$('#al').innerHTML=AL.map((a,i)=>'<option value="'+i+'">'+esc(a.n)+'</option>').join('')}
+function updAlb(){const a=AL[+$('#al').value||0]||AL[0];$('#alb').textContent=a.f+' '+a.n+(a.m!=1?' (×'+a.m+')':'')+'  ▾'}
+function alList(){
+ const q=$('#aq').value.trim().toLowerCase(),cur=+$('#al').value||0;
+ $('#ag').innerHTML=AL.map((a,i)=>({a,i})).filter(x=>(!aty||x.a.t==aty||x.a.t=='C')&&x.a.n.toLowerCase().includes(q)).map(x=>'<button class="ac'+(x.i==cur?' on':'')+'" data-ai="'+x.i+'"><b>'+esc(x.a.f+' '+x.a.n)+'</b><span class="mut" style="font-size:.8rem">'+TL[x.a.t]+(x.a.m!=1?' / ราคา ×'+x.a.m:'')+'</span></button>').join('')||'<p class="mut">ไม่พบสายการบิน ลองระบุชื่อเองด้านล่าง</p>';
+}
+function setAl(i){$('#al').value=i;updAlb();$('#am').hidden=true;$('#al').dispatchEvent(new Event('input',{bubbles:true}))}
+$('#alb').onclick=()=>{$('#am').hidden=false;alList()};
+$('#amx').onclick=()=>{$('#am').hidden=true};
+document.addEventListener('keydown',e=>{if(e.key=='Escape')$('#am').hidden=true});
+$('#am').addEventListener('click',e=>{
+ if(e.target.id=='am')e.target.hidden=true;
+ const b=e.target.closest('[data-ai]');if(b)setAl(+b.dataset.ai);
+ const t=e.target.closest('[data-ty]');if(t){aty=t.dataset.ty;document.querySelectorAll('#aty button').forEach(x=>x.className='btn'+(x==t?'':' o'));alList()}
+});
+$('#aq').addEventListener('input',alList);
+$('#cb').onclick=()=>{const n=$('#cn').value.trim(),m=Math.min(3,Math.max(.3,+$('#cm').value||1));if(!n)return;AL.push({f:'✈️',n,t:'C',m});alOpts();setAl(AL.length-1);$('#cn').value=''};
+const HD=['🛏️|โฮสเทล (เตียงในห้องรวม)|S|0.3','📦|โรงแรมแคปซูล|S|0.4','🏠|เกสต์เฮาส์|S|0.5','🏨|โรงแรมราคาประหยัด|S|0.6','🏨|ibis budget|S|0.6','🏨|Super Hotel|S|0.65','🏨|Toyoko Inn|S|0.7','🏨|ibis|S|0.75','🏨|APA Hotel|S|0.75',
+'🏨|โรงแรม 3 ดาว|M|1','🏢|อพาร์ตเมนต์ / Airbnb|M|0.9','🏨|Holiday Inn Express|M|0.9','🏨|Dormy Inn|M|0.9','🏨|Hotel Gracery|M|0.95','🏨|Mercure|M|1','🏨|Aloft|M|1','🏨|Centara|M|1','🏨|Amari|M|1','🏨|Novotel|M|1.1','🏨|Holiday Inn|M|1.1','🏨|Courtyard by Marriott|M|1.1','🏨|Radisson|M|1.1','🏢|Ascott (เซอร์วิสอพาร์ตเมนต์)|M|1.1','🏨|Dusit Thani|M|1.2','🏨|โรงแรมบูติก|M|1.2','🏨|DoubleTree by Hilton|M|1.25',
+'🏨|Crowne Plaza|L|1.3','🏨|Sheraton|L|1.4','🏨|Pullman|L|1.4','🏨|โรงแรม 4 ดาว|L|1.5','🏨|Hilton|L|1.5','🏨|Marriott|L|1.5','🏨|Hyatt Regency|L|1.5','🏨|Kimpton|L|1.6','🏨|Westin|L|1.7','🏨|Sofitel|L|1.8','🏖️|รีสอร์ต|L|1.8','🏯|เรียวกัง / ที่พักแบบดั้งเดิม|L|1.8','🏨|Grand Hyatt|L|1.9','🏨|InterContinental|L|1.9','🏨|Shangri-La|L|1.9','🏨|Fairmont|L|2','🏨|Conrad|L|2','🏨|W Hotels|L|2','🏨|โรงแรม 5 ดาว|L|2.2','🏡|วิลล่าส่วนตัว|L|2.2','🏨|Park Hyatt|L|2.6','🏨|The Ritz-Carlton|L|2.8','🏨|Mandarin Oriental|L|2.8','🏨|The Peninsula|L|2.8','🏨|Raffles|L|2.8','🏨|Four Seasons|L|3'];
+const HL=[{f:'🌐',n:'ไม่ระบุ (ตามรูปแบบการเดินทาง)',t:'',m:1}].concat(HD.map(x=>{const a=x.split('|');return{f:a[0],n:a[1],t:a[2],m:+a[3]}}));
+const TH={'':'ใช้ราคาตามรูปแบบการเดินทาง',S:'ประหยัด',M:'ระดับกลาง',L:'หรู',C:'ระบุเอง'};
+let hty='';
+function hoOpts(){$('#ho').innerHTML=HL.map((a,i)=>'<option value="'+i+'">'+esc(a.n)+'</option>').join('')}
+function updHo(){const a=HL[+$('#ho').value||0]||HL[0];$('#hob').textContent=a.f+' '+a.n+(a.m!=1&&a.t?' (×'+a.m+')':'')+'  ▾'}
+function hoList(){
+ const q=$('#hq').value.trim().toLowerCase(),cur=+$('#ho').value||0;
+ $('#hg').innerHTML=HL.map((a,i)=>({a,i})).filter(x=>(!hty||x.a.t==hty||x.a.t=='C')&&x.a.n.toLowerCase().includes(q)).map(x=>'<button class="ac'+(x.i==cur?' on':'')+'" data-hi="'+x.i+'"><b>'+esc(x.a.f+' '+x.a.n)+'</b><span class="mut" style="font-size:.8rem">'+TH[x.a.t]+(x.a.t?' / ราคา ×'+x.a.m:'')+'</span></button>').join('')||'<p class="mut">ไม่พบที่พัก ลองระบุชื่อเองด้านล่าง</p>';
+}
+function setHo(i){$('#ho').value=i;updHo();$('#hm').hidden=true;$('#ho').dispatchEvent(new Event('input',{bubbles:true}))}
+$('#hob').onclick=()=>{$('#hm').hidden=false;hoList()};
+$('#hmx').onclick=()=>{$('#hm').hidden=true};
+document.addEventListener('keydown',e=>{if(e.key=='Escape')$('#hm').hidden=true});
+$('#hm').addEventListener('click',e=>{
+ if(e.target.id=='hm')e.target.hidden=true;
+ const b=e.target.closest('[data-hi]');if(b)setHo(+b.dataset.hi);
+ const t=e.target.closest('[data-ty]');if(t){hty=t.dataset.ty;document.querySelectorAll('#hty button').forEach(x=>x.className='btn'+(x==t?'':' o'));hoList()}
+});
+$('#hq').addEventListener('input',hoList);
+$('#hcb').onclick=()=>{const n=$('#hcn').value.trim(),m=Math.min(5,Math.max(.2,+$('#hcm').value||1));if(!n)return;HL.push({f:'🏨',n,t:'C',m});hoOpts();setHo(HL.length-1);$('#hcn').value=''};
+function tvFlight(c,o){
+ const f=d=>String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear();
+ if(!o.D||!c.code)return 'https://www.traveloka.com/th-th/flight';
+ return ('https://www.traveloka.com/th-th/flight/fullsearch?ap=BKK.'+encodeURIComponent(c.code.toUpperCase())+'&dt='+f(o.D.A)+'.'+f(o.D.B)+'&ps='+o.p+'.0.0&sc=ECONOMY').replace(/&/g,'&amp;');
+}
+function hotelCard(c,o,r){
+ const nt=Math.max(o.d-1,1),rm=Math.ceil(o.p/2),tot=r.it[1][2],pr=tot/(rm*nt),pp=tot/(o.p*nt);
+ const q=encodeURIComponent($('#ci').value.split(',')[0].trim()||c.n);
+ const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+ const bk=('https://www.booking.com/searchresults.th.html?ss='+q+(o.D?'&checkin='+iso(o.D.A)+'&checkout='+iso(o.D.B):'')+'&group_adults='+o.p+'&no_rooms='+rm).replace(/&/g,'&amp;');
+ const ag=('https://www.agoda.com/th-th/search?textToSearch='+q+(o.D?'&checkIn='+iso(o.D.A)+'&checkOut='+iso(o.D.B):'')+'&rooms='+rm+'&adults='+o.p).replace(/&/g,'&amp;');
+ const bx=(t,v)=>'<div><div class="mut">'+t+'</div><b style="font-size:1.4rem">'+fmt(v)+'</b> บาท</div>';
+ return '<div class="card"><h3>🏨 ราคาที่พักเฉลี่ย</h3><div class="g" style="margin-top:8px">'+bx('เฉลี่ยต่อห้องต่อคืน',pr)+bx('เฉลี่ยต่อคนต่อคืน',pp)+bx('รวม '+nt+' คืน / '+rm+' ห้อง',tot)+'</div>'+
+ '<p class="mut" style="margin:8px 0">ช่วงราคาห้องของ'+esc(c.n)+' ประหยัด '+fmt(c.hotel[0])+' / ปานกลาง '+fmt(c.hotel[1])+' / สบาย '+fmt(c.hotel[2])+' บาทต่อห้องต่อคืน (ยังไม่รวมการปรับตามวันที่)</p>'+
+ '<a class="btn o" target="_blank" rel="noopener noreferrer" href="'+bk+'">ดูที่พักจริงบน Booking.com</a> <a class="btn o" target="_blank" rel="noopener noreferrer" href="'+ag+'">ดูบน Agoda</a> <a class="btn o" target="_blank" rel="noopener noreferrer" href="https://www.traveloka.com/th-th/hotel">ดูบน Traveloka</a>'+
+ '<div class="mut" style="font-size:.8rem;margin-top:6px">ราคาในหน้านี้เป็นค่าประมาณ ถ้าได้ราคาจริงแล้ว แก้ราคาห้องได้ที่แท็บแก้ไขข้อมูล</div></div>';
+}
+let _lt=0;
+function cnt(){const t=document.querySelector('#out .tot');if(!t||!t.firstChild)return;const n=t.firstChild,to=parseInt(n.textContent.replace(/[^0-9]/g,''))||0,from=_lt;_lt=to;if(from===to)return;const t0=performance.now();(function f(now){const k=Math.min(1,(now-t0)/450),e=1-Math.pow(1-k,3);n.textContent=fmt(from+(to-from)*e)+' ';if(k<1&&n.isConnected)requestAnimationFrame(f)})(t0)}
+const stag=q=>document.querySelectorAll(q).forEach((e,i)=>e.style.setProperty('--i',i));
+{const _p=pick,_v=prov;pick=function(){_p();stag('#pgrid .cc');stag('#cf span')};prov=function(){_v();stag('#pl .chip')}}
+function burst(x,y){const E=['✨','🌸','✈️','⭐','🎉','🧳'];for(let i=0;i<14;i++){const e=document.createElement('span'),a=Math.random()*6.28,d=60+Math.random()*90;e.className='bs';e.textContent=E[i%E.length];e.style.cssText='left:'+x+'px;top:'+y+'px;--dx:'+Math.cos(a)*d+'px;--dy:'+(Math.sin(a)*d-40)+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),900)}}
+document.addEventListener('pointerdown',e=>{if(e.target.closest('.btn.lg,#save,#pgo'))burst(e.clientX,e.clientY)});
+const LOGO='data:image/jpeg;base64,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';
+document.querySelectorAll('img[data-logo]').forEach(i=>{i.src=LOGO});
+function fcr(){const n=$('#crn').value.trim(),a=$('#cra').value.trim();$('#fcr').textContent=(n?' / ผู้จัดทำ: '+n:'')+(a?' / ที่ปรึกษา: '+a:'')}
+(()=>{let c={};try{c=JSON.parse(localStorage.getItem('tp_cr'))||{}}catch(e){}$('#crn').value=c.n||'';$('#cra').value=c.a||'';$('#cri').value=c.i||'';fcr()})();
+['#crn','#cra','#cri'].forEach(q=>$(q).addEventListener('input',()=>{fcr();try{localStorage.setItem('tp_cr',JSON.stringify({n:$('#crn').value,a:$('#cra').value,i:$('#cri').value}))}catch(e){}}));
+$('#crb').onclick=()=>{$('#cr').hidden=false};$('#crx').onclick=()=>{$('#cr').hidden=true};
+$('#cr').addEventListener('click',e=>{if(e.target.id=='cr')e.target.hidden=true});
+document.addEventListener('keydown',e=>{if(e.key=='Escape')$('#cr').hidden=true});
+const LGS=[['th','ไทย'],['en','English'],['zh','中文'],['ja','日本語'],['ko','한국어']];
+let LGI=0;window.LGC='th';
+const TH_RE=/[\u0E00-\u0E7F]/;
+const EX=[
+['เพิ่ม','Add','添加','追加','추가'],['ปิด','Close','关闭','閉じる','닫기'],['เปิด','Open','打开','開く','열기'],['ลบ','Delete','删除','削除','삭제'],['ใช้','Use','使用','使う','사용'],
+['หรู','Luxury','豪华','高級','럭셔리'],['ทั้งหมด','All','全部','すべて','전체'],['ที่พัก','Accommodation','住宿','宿泊','숙소'],['รูปแบบ','Style','类型','スタイル','스타일'],['ผู้จัดทำ','Creators','制作人','制作者','제작자'],['ประหยัด','Budget','经济','節約','절약'],['ปานกลาง','Mid-range','中档','標準','중간'],['สบาย','Comfort','舒适','快適','편안'],['ระดับกลาง','Mid-tier','中等','中級','중급'],['จีน','China','中国','中国','중국']
+];
+const TX=[
+['วิทยาลัยเทคโนโลยีการจัดการขอนแก่น','Khon Kaen Management Technology College','孔敬管理技术学院','コンケン経営技術大学','콘깬 경영기술대학'],
+['โลโก้วิทยาลัยเทคโนโลยีการจัดการขอนแก่น','Khon Kaen Management Technology College logo','孔敬管理技术学院标志','コンケン経営技術大学のロゴ','콘깬 경영기술대학 로고'],
+['โครงงานเว็บไซต์ TravelPlan / อ.เมือง จ.ขอนแก่น','TravelPlan website project / Mueang District, Khon Kaen','TravelPlan 网站项目 / 孔敬府 孟县','TravelPlan ウェブサイトプロジェクト / コンケン県ムアン郡','TravelPlan 웹사이트 프로젝트 / 콘깬주 므앙군'],
+['ออกจากระบบ','Log out','退出登录','ログアウト','로그아웃'],
+['เข้าสู่ระบบ TravelPlan','Sign in to TravelPlan','登录 TravelPlan','TravelPlan にログイン','TravelPlan 로그인'],
+['สมาชิกจะมีทริปที่บันทึกและข้อมูลประเทศที่แก้ไขเก็บไว้ในบัญชี เปิดดูได้จากทุกเครื่อง ข้อมูลเป็นส่วนตัวเฉพาะบัญชีของคุณ','Members keep saved trips and edited country data in their account, viewable from any device. Your data is private to your account.','会员的已保存行程和修改过的国家数据会保存在账户中，可在任何设备上查看，数据仅限您的账户访问。','メンバーは保存した旅行や編集した国データをアカウントに保存でき、どの端末からでも閲覧できます。データはあなたのアカウント専用です。','회원은 저장한 여행과 수정한 국가 데이터를 계정에 보관하며 어느 기기에서나 볼 수 있습니다. 데이터는 본인 계정에서만 볼 수 있습니다.'],
+['เข้าสู่ระบบ','Sign in','登录','ログイン','로그인'],['สมัครสมาชิก','Sign up','注册','新規登録','회원가입'],
+['ชื่อผู้ใช้ (Username)','Username','用户名','ユーザー名','사용자 이름'],['รหัสผ่าน (Password)','Password','密码','パスワード','비밀번호'],['ยืนยันรหัสผ่าน','Confirm password','确认密码','パスワード（確認）','비밀번호 확인'],
+['ทริปและข้อมูลของคุณถูกเข้ารหัสด้วยรหัสผ่านก่อนบันทึก หากลืมรหัสผ่านจะกู้คืนข้อมูลไม่ได้','Your trips and data are encrypted with your password before saving. If you forget your password, the data cannot be recovered.','您的行程和数据在保存前会用密码加密。忘记密码将无法恢复数据。','旅行とデータは保存前にパスワードで暗号化されます。パスワードを忘れるとデータは復元できません。','여행과 데이터는 저장 전에 비밀번호로 암호화됩니다. 비밀번호를 잊으면 데이터를 복구할 수 없습니다.'],
+['ใช้งานแบบผู้เยี่ยมชม (บันทึกในเครื่องนี้เท่านั้น)','Continue as guest (saved on this device only)','以访客身份使用（仅保存在本设备）','ゲストとして利用（この端末にのみ保存）','게스트로 사용 (이 기기에만 저장)'],
+['ผู้เยี่ยมชม','Guest','访客','ゲスト','게스트'],['(สมาชิก)','(member)','（会员）','（メンバー）','(회원)'],
+['วางแผนเที่ยวต่างประเทศ เลือกประเทศ เลือกจังหวัดหรือเมือง แล้วดูค่าใช้จ่ายและเอกสารที่ต้องเตรียมไว้ในที่เดียว','Plan your trip abroad: choose a country, choose provinces or cities, then see costs and the documents to prepare, all in one place.','规划出国旅行：选择国家、选择省份或城市，一站查看费用和需要准备的文件。','海外旅行を計画：国を選び、県や都市を選んで、費用と必要書類をまとめて確認。','해외여행 계획: 나라와 지역(도시)을 선택하고 비용과 준비 서류를 한곳에서 확인하세요.'],
+['เลือกประเทศปลายทาง','Choose a destination country','选择目的地国家','目的地の国を選ぶ','목적지 국가 선택'],
+['เลือกจังหวัดหรือเมืองที่จะไป เลือกได้หลายที่','Choose the provinces or cities to visit (you can pick several)','选择要去的省份或城市（可多选）','訪れる県・都市を選択（複数可）','방문할 지역·도시를 선택하세요 (여러 곳 가능)'],
+['เลือกจังหวัดหรือเมืองที่จะไป','Choose the provinces or cities to visit','选择要去的省份或城市','訪れる県・都市を選ぶ','방문할 지역·도시 선택'],
+['ดูงบประมาณและเช็กลิสต์เอกสาร','See the budget and document checklist','查看预算和文件清单','予算と書類チェックリストを見る','예산과 서류 체크리스트 보기'],
+['เริ่มวางแผน','Start planning','开始规划','計画を始める','계획 시작'],
+['ขั้นที่ 1 จาก 3','Step 1 of 3','第 1 步，共 3 步','ステップ 1 / 3','1단계 / 3'],['ขั้นที่ 2 จาก 3','Step 2 of 3','第 2 步，共 3 步','ステップ 2 / 3','2단계 / 3'],
+['ราคาด้านล่างเป็นประมาณการสำหรับ 1 คน 5 วัน แบบปานกลาง ไม่ใช่ราคาจริงแบบเรียลไทม์','Prices below are estimates for 1 person, 5 days, mid-range, not real-time prices.','以下价格为 1 人 5 天中档的估算，并非实时价格。','以下の価格は 1 人・5 日間・標準クラスの目安で、リアルタイム価格ではありません。','아래 가격은 1인 5일 중간 등급 기준 추정치이며 실시간 가격이 아닙니다.'],
+['กลับหน้าปก','Back to cover','返回封面','表紙に戻る','표지로 돌아가기'],['ข้ามไปหน้าวางแผน','Skip to planner','跳到规划页','プラン画面へ','계획 화면으로 건너뛰기'],
+['เพิ่มจังหวัด/เมืองอื่น','Add another province/city','添加其他省份/城市','他の県・都市を追加','다른 지역/도시 추가'],['เลือกทั้งหมด','Select all','全选','すべて選択','모두 선택'],['เปลี่ยนประเทศ','Change country','更换国家','国を変更','국가 변경'],
+['ต่อไป: ดูงบและเอกสาร','Next: budget and documents','下一步：预算和文件','次へ：予算と書類','다음: 예산과 서류'],
+['วางแผนและประเมินค่าใช้จ่ายสำหรับการเดินทางไปต่างประเทศ (ออกเดินทางจากกรุงเทพฯ)','Plan and estimate costs for trips abroad (departing from Bangkok)','规划并估算出国旅行费用（从曼谷出发）','海外旅行の計画と費用見積もり（バンコク出発）','해외여행 계획 및 비용 추정 (방콕 출발)'],
+['หน้าปก','Cover','封面','表紙','표지'],['เลือกประเทศ / จังหวัด','Choose country / province','选择国家/省份','国・県を選ぶ','국가/지역 선택'],
+['ข้อมูลนี้เป็นการประมาณการเพื่อวางแผนเบื้องต้น ไม่ใช่ราคาจริงแบบเรียลไทม์ กฎวีซ่าและเอกสารเปลี่ยนได้ ควรตรวจสอบกับสถานทูตหรือหน่วยงานทางการก่อนเดินทางทุกครั้ง','This is an estimate for initial planning, not real-time prices. Visa and document rules can change, so always check with the embassy or official authorities before traveling.','此为初步规划用的估算，并非实时价格。签证和文件规定可能变化，出行前请务必向使领馆或官方机构核实。','これは初期計画用の目安で、リアルタイム価格ではありません。ビザや書類の規則は変わることがあるため、渡航前に必ず大使館や公的機関で確認してください。','이는 초기 계획용 추정치이며 실시간 가격이 아닙니다. 비자와 서류 규정은 바뀔 수 있으니 여행 전 반드시 대사관이나 공식 기관에서 확인하세요.'],
+['วางแผนทริป','Plan trip','规划行程','旅行を計画','여행 계획'],['งบนี้ไปไหนได้','Where can this budget go?','这个预算能去哪里','この予算で行ける所','이 예산으로 갈 수 있는 곳'],['ทริปที่บันทึกไว้','Saved trips','已保存的行程','保存した旅行','저장된 여행'],['ทริปที่บันทึก','Saved trips','已保存行程','保存した旅行','저장된 여행'],['แก้ไขข้อมูลประเทศ','Edit country data','编辑国家数据','国データを編集','국가 데이터 편집'],
+['ประเทศปลายทาง','Destination country','目的地国家','目的地の国','목적지 국가'],['วันเดินทางไป','Departure date','出发日期','出発日','출발일'],['วันเดินทางกลับ','Return date','返程日期','帰国日','귀국일'],
+['จำนวนวัน (คำนวณจากวันที่ ถ้าล้างวันที่ออก กรอกเองได้)','Number of days (calculated from the dates; clear the dates to enter manually)','天数（根据日期计算，清除日期后可手动输入）','日数（日付から計算。日付を消すと手入力できます）','일수 (날짜로 계산됨, 날짜를 지우면 직접 입력 가능)'],
+['จำนวนวัน','Days','天数','日数','일수'],['จำนวนคน','Number of people','人数','人数','인원'],['รูปแบบการเดินทาง','Travel style','旅行方式','旅行スタイル','여행 스타일'],
+['สบาย / หรู','Comfort / Luxury','舒适 / 豪华','快適 / 高級','편안 / 럭셔리'],['งบประมาณรวม (บาท)','Total budget (THB)','总预算（泰铢）','総予算（バーツ）','총 예산 (바트)'],['เงินสำรองฉุกเฉิน (%)','Emergency reserve (%)','应急备用金 (%)','緊急予備費 (%)','비상 예비비 (%)'],['สายการบิน','Airline','航空公司','航空会社','항공사'],
+['เมืองที่ต้องการไป (คั่นด้วยเครื่องหมายจุลภาค)','Cities to visit (separate with commas)','想去的城市（用逗号分隔）','訪れたい都市（カンマ区切り）','가고 싶은 도시 (쉼표로 구분)'],
+['แก้ไขราคาประมาณการ สถานะวีซ่า และเอกสารของแต่ละประเทศได้เอง ข้อมูลจะถูกบันทึกไว้ในเบราว์เซอร์นี้ (หน่วยเป็นบาท)','Edit estimated prices, visa status and documents for each country. Data is saved in this browser (units in THB).','可自行修改各国的估算价格、签证状态和文件。数据保存在此浏览器中（单位：泰铢）。','各国の目安価格・ビザ状況・書類を編集できます。データはこのブラウザに保存されます（単位：バーツ）。','국가별 추정 가격, 비자 상태, 서류를 직접 수정할 수 있습니다. 데이터는 이 브라우저에 저장됩니다 (단위: 바트).'],
+['+ เพิ่มประเทศ','+ Add country','+ 添加国家','+ 国を追加','+ 국가 추가'],['รีเซ็ตเป็นค่าเริ่มต้น','Reset to defaults','恢复默认','初期設定に戻す','기본값으로 초기화'],
+['🎓 โครงงานเพื่อการศึกษา วิทยาลัยเทคโนโลยีการจัดการขอนแก่น อ.เมือง จ.ขอนแก่น','🎓 Educational project, Khon Kaen Management Technology College, Mueang District, Khon Kaen','🎓 教育项目，孔敬管理技术学院，孔敬府孟县','🎓 教育プロジェクト コンケン経営技術大学（コンケン県ムアン郡）','🎓 교육용 프로젝트 콘깬 경영기술대학 (콘깬주 므앙군)'],
+['ไม่แสวงหากำไร / ข้อมูลราคาเป็นค่าประมาณ ไม่ใช่ข้อมูลทางการ','Non-profit / Prices are estimates, not official data','非营利 / 价格为估算，非官方数据','非営利 / 価格は目安であり公式情報ではありません','비영리 / 가격은 추정치이며 공식 정보가 아닙니다'],
+['📚 อ้างอิงและเครดิต','📚 References and credits','📚 参考与致谢','📚 参考文献とクレジット','📚 참고 자료 및 크레딧'],
+['เว็บไซต์นี้เป็นโครงงานเพื่อการศึกษาของวิทยาลัยเทคโนโลยีการจัดการขอนแก่น ไม่แสวงหากำไร ไม่ได้เป็นตัวแทน ไม่ได้รับการรับรอง และไม่ได้เกี่ยวข้องกับผู้ให้บริการด้านการเดินทางรายใด','This website is an educational project of Khon Kaen Management Technology College. It is non-profit and is not an agent, endorsed by, or affiliated with any travel service provider.','本网站是孔敬管理技术学院的教育项目，非营利，不是任何旅行服务商的代理，也未获其认可或与其有关联。','このウェブサイトはコンケン経営技術大学の教育プロジェクトで、非営利です。いかなる旅行サービス事業者の代理・承認・提携もありません。','이 웹사이트는 콘깬 경영기술대학의 교육용 프로젝트로 비영리이며, 어떤 여행 서비스 업체의 대리인이거나 승인·제휴를 받은 것이 아닙니다.'],
+['ชื่อผู้จัดทำ / รหัสนักศึกษา','Creator name / student ID','制作人姓名 / 学号','制作者名 / 学籍番号','제작자 이름 / 학번'],['อาจารย์ที่ปรึกษา','Advisor','指导老师','指導教員','지도 교수'],
+['เครดิตรูปภาพประกอบ (ชื่อผู้ถ่ายภาพ / แหล่งที่มา / ใบอนุญาต)','Photo credits (photographer / source / license)','插图照片致谢（摄影师 / 来源 / 许可证）','写真クレジット（撮影者 / 出典 / ライセンス）','사진 크레딧 (촬영자 / 출처 / 라이선스)'],
+['แหล่งอ้างอิงภายนอก','External references','外部参考来源','外部の参照先','외부 참고처'],
+['เว็บนี้เพียงลิงก์ไปยังเว็บไซต์เหล่านี้ ไม่ได้คัดลอกเนื้อหา โลโก้ หรือราคาจากเว็บไซต์ใด ชื่อและเครื่องหมายการค้าเป็นของเจ้าของแต่ละราย ผู้ใช้ควรตรวจสอบราคาและเงื่อนไขจากเว็บไซต์ของผู้ให้บริการโดยตรงก่อนจอง','This site only links to these websites and does not copy content, logos or prices from any of them. Names and trademarks belong to their respective owners. Please check prices and terms directly on the provider’s website before booking.','本站仅链接到这些网站，未复制其任何内容、标志或价格。名称和商标归各自所有者所有。预订前请直接在服务商网站核实价格和条款。','このサイトはこれらのウェブサイトへリンクするのみで、内容・ロゴ・価格を複製していません。名称や商標は各所有者に帰属します。予約前に提供元のサイトで価格と条件をご確認ください。','이 사이트는 해당 웹사이트로 링크만 제공하며 콘텐츠, 로고, 가격을 복사하지 않습니다. 이름과 상표는 각 소유자에게 있습니다. 예약 전 서비스 제공업체 사이트에서 가격과 조건을 직접 확인하세요.'],
+['ข้อมูลและส่วนประกอบอื่น','Data and other components','数据与其他组成部分','データとその他の要素','데이터 및 기타 구성 요소'],
+['ราคา ค่าใช้จ่าย สถานะวีซ่า และเอกสารเป็นค่าประมาณที่ผู้จัดทำกำหนดเอง ควรตรวจสอบกับสถานทูตหรือหน่วยงานทางการก่อนเดินทาง / อีโมจิเป็นอักขระ Unicode / ฟอนต์ Prompt และ Sarabun ใช้ภายใต้ SIL Open Font License ผ่าน Google Fonts / โลโก้วิทยาลัยเป็นของวิทยาลัยเทคโนโลยีการจัดการขอนแก่น','Prices, costs, visa status and documents are estimates set by the creators; check with the embassy or official authorities before traveling / Emoji are Unicode characters / Prompt and Sarabun fonts are used under the SIL Open Font License via Google Fonts / The college logo belongs to Khon Kaen Management Technology College.','价格、费用、签证状态和文件均为制作者设定的估算值，出行前请向使领馆或官方机构核实 / 表情符号为 Unicode 字符 / Prompt 和 Sarabun 字体通过 Google Fonts 按 SIL Open Font License 使用 / 学院标志归孔敬管理技术学院所有。','価格・費用・ビザ状況・書類は制作者が設定した目安です。渡航前に大使館や公的機関で確認してください / 絵文字は Unicode 文字です / フォント Prompt と Sarabun は Google Fonts 経由で SIL Open Font License に基づき使用 / 大学のロゴはコンケン経営技術大学に帰属します。','가격, 비용, 비자 상태, 서류는 제작자가 설정한 추정치이므로 여행 전 대사관이나 공식 기관에서 확인하세요 / 이모지는 Unicode 문자입니다 / Prompt와 Sarabun 글꼴은 Google Fonts를 통해 SIL Open Font License로 사용됩니다 / 대학 로고는 콘깬 경영기술대학의 소유입니다.'],
+['ผู้จัดทำ:','Creator:','制作人：','制作者：','제작자:'],['ที่ปรึกษา:','Advisor:','指导老师：','指導教員：','지도 교수:'],
+['เลือกสายการบิน','Choose an airline','选择航空公司','航空会社を選ぶ','항공사 선택'],['ต้นทุนต่ำ','Low-cost','廉价航空','LCC','저비용'],['เต็มรูปแบบ','Full-service','全服务','フルサービス','풀서비스'],
+['ไม่พบสายที่ต้องการ? ระบุชื่อเอง','Can’t find it? Enter a name','找不到？自行输入名称','見つからない？名前を入力','찾을 수 없나요? 이름 직접 입력'],['ตัวคูณราคา','Price multiplier','价格系数','価格倍率','가격 배수'],
+['เลือกที่พัก','Choose accommodation','选择住宿','宿泊先を選ぶ','숙소 선택'],['ตัวคูณคิดเทียบกับราคาห้องระดับปานกลางของประเทศนั้น','Multipliers are relative to the mid-range room price of that country','系数相对于该国中档房价计算','倍率はその国の標準クラスの客室料金が基準です','배수는 해당 국가의 중간 등급 객실 가격 기준입니다'],
+['ไม่พบที่พักที่ต้องการ? ระบุชื่อเอง','Can’t find it? Enter a name','找不到？自行输入名称','見つからない？名前を入力','찾을 수 없나요? 이름 직접 입력'],
+['พิมพ์ชื่อสถานที่','Type a place name','输入地点名称','場所名を入力','장소 이름 입력'],['เช่น โตเกียว, โอซาก้า, เกียวโต','e.g. Tokyo, Osaka, Kyoto','例如：东京、大阪、京都','例：東京、大阪、京都','예: 도쿄, 오사카, 교토'],
+['พิมพ์ชื่อผู้จัดทำ','Type creator name','输入制作人姓名','制作者名を入力','제작자 이름 입력'],['พิมพ์ชื่ออาจารย์ที่ปรึกษา','Type advisor name','输入指导老师姓名','指導教員名を入力','지도 교수 이름 입력'],
+['เช่น ภาพโอซาก้า: ชื่อผู้ถ่าย / เว็บที่มา / ใบอนุญาต','e.g. Osaka photo: photographer / source site / license','例如：大阪照片：摄影师 / 来源网站 / 许可证','例：大阪の写真：撮影者 / 出典サイト / ライセンス','예: 오사카 사진: 촬영자 / 출처 사이트 / 라이선스'],
+['ค้นหาสายการบิน เช่น Thai, Japan, Emirates','Search airlines, e.g. Thai, Japan, Emirates','搜索航空公司，如 Thai、Japan、Emirates','航空会社を検索（例：Thai、Japan、Emirates）','항공사 검색 (예: Thai, Japan, Emirates)'],['ชื่อสายการบิน','Airline name','航空公司名称','航空会社名','항공사 이름'],
+['ค้นหาที่พัก เช่น Hilton, โฮสเทล, รีสอร์ต','Search stays, e.g. Hilton, hostel, resort','搜索住宿，如 Hilton、青旅、度假村','宿泊先を検索（例：Hilton、ホステル、リゾート）','숙소 검색 (예: Hilton, 호스텔, 리조트)'],['ชื่อที่พัก','Accommodation name','住宿名称','宿泊先名','숙소 이름'],
+['ไม่ระบุสายการบิน','No airline specified','不指定航空公司','航空会社を指定しない','항공사 미지정'],['ไม่ระบุ (ตามรูปแบบการเดินทาง)','Not specified (by travel style)','不指定（按旅行方式）','指定しない（旅行スタイルに従う）','미지정 (여행 스타일 기준)'],
+['ใช้ราคาประมาณเดิม','Uses the default estimate','使用默认估算价','既定の目安価格を使用','기본 추정가 사용'],['ใช้ราคาตามรูปแบบการเดินทาง','Priced by travel style','按旅行方式定价','旅行スタイルで価格設定','여행 스타일에 따라 가격 책정'],['ระบุเอง','Custom','自定义','カスタム','직접 입력'],['ราคา ×','price ×','价格 ×','価格 ×','가격 ×'],
+['ไม่พบสายการบิน ลองระบุชื่อเองด้านล่าง','No airline found. Try entering a name below.','未找到航空公司，请在下方自行输入。','航空会社が見つかりません。下に名前を入力してください。','항공사를 찾을 수 없습니다. 아래에 이름을 입력해 보세요.'],
+['ไม่พบที่พัก ลองระบุชื่อเองด้านล่าง','No accommodation found. Try entering a name below.','未找到住宿，请在下方自行输入。','宿泊先が見つかりません。下に名前を入力してください。','숙소를 찾을 수 없습니다. 아래에 이름을 입력해 보세요.'],
+['ยังไม่มีรายชื่อ พิมพ์เพิ่มด้านล่าง หรือเพิ่มในแท็บแก้ไขข้อมูลประเทศ','No list yet. Type to add below, or add in the Edit country data tab.','暂无列表，请在下方输入添加，或在“编辑国家数据”页添加。','リストがありません。下に入力するか、「国データを編集」タブで追加してください。','목록이 없습니다. 아래에 입력하거나 국가 데이터 편집 탭에서 추가하세요.'],
+['โฮสเทล (เตียงในห้องรวม)','Hostel (dorm bed)','青年旅舍（多人间床位）','ホステル（ドミトリー）','호스텔(도미토리)'],['โรงแรมแคปซูล','Capsule hotel','胶囊旅馆','カプセルホテル','캡슐 호텔'],['เกสต์เฮาส์','Guesthouse','民宿','ゲストハウス','게스트하우스'],['โรงแรมราคาประหยัด','Budget hotel','经济型酒店','格安ホテル','저가 호텔'],['โรงแรม 3 ดาว','3-star hotel','三星级酒店','3つ星ホテル','3성급 호텔'],['อพาร์ตเมนต์ / Airbnb','Apartment / Airbnb','公寓 / Airbnb','アパート / Airbnb','아파트 / Airbnb'],['โรงแรมบูติก','Boutique hotel','精品酒店','ブティックホテル','부티크 호텔'],['โรงแรม 4 ดาว','4-star hotel','四星级酒店','4つ星ホテル','4성급 호텔'],['โรงแรม 5 ดาว','5-star hotel','五星级酒店','5つ星ホテル','5성급 호텔'],['รีสอร์ต','Resort','度假村','リゾート','리조트'],['เรียวกัง / ที่พักแบบดั้งเดิม','Ryokan / traditional stay','日式旅馆 / 传统住宿','旅館 / 伝統的な宿','료칸 / 전통 숙소'],['วิลล่าส่วนตัว','Private villa','私人别墅','プライベートヴィラ','프라이빗 빌라'],['Ascott (เซอร์วิสอพาร์ตเมนต์)','Ascott (serviced apartment)','Ascott（服务式公寓）','Ascott（サービスアパートメント）','Ascott(서비스 아파트)'],['โฮสเทล','hostel','青旅','ホステル','호스텔'],
+['งบของคุณ','Your budget','您的预算','あなたの予算','내 예산'],['งบเพียงพอ เหลืออีก','Budget is enough, remaining','预算充足，还剩','予算内です。残り','예산 충분, 남는 금액'],['งบไม่พอ ควรเพิ่มอีก','Budget is short, add about','预算不足，建议再增加','予算不足です。あと','예산 부족, 추가 필요'],['ยังไม่ได้ใส่งบประมาณ','No budget entered','尚未输入预算','予算が未入力です','예산이 입력되지 않았습니다'],
+['บันทึกทริปนี้','Save this trip','保存此行程','この旅行を保存','이 여행 저장'],['บันทึกแล้ว','Saved','已保存','保存しました','저장됨'],
+['ดูราคาตั๋วจริงบน Skyscanner','Check real fares on Skyscanner','在 Skyscanner 查看真实票价','Skyscanner で実際の運賃を見る','Skyscanner에서 실제 요금 보기'],['ดูบน Traveloka','View on Traveloka','在 Traveloka 查看','Traveloka で見る','Traveloka에서 보기'],['ดูบน Agoda','View on Agoda','在 Agoda 查看','Agoda で見る','Agoda에서 보기'],['ดูที่พักจริงบน Booking.com','Check real stays on Booking.com','在 Booking.com 查看真实住宿','Booking.com で実際の宿泊先を見る','Booking.com에서 실제 숙소 보기'],
+['ราคาในหน้านี้เป็นค่าประมาณ แก้ราคาตั๋วได้ที่แท็บแก้ไขข้อมูล','Prices here are estimates. Edit the fare in the Edit data tab.','此处价格为估算，可在“编辑数据”页修改机票价格。','ここの価格は目安です。運賃は「データを編集」タブで変更できます。','여기 가격은 추정치입니다. 요금은 데이터 편집 탭에서 수정하세요.'],
+['ราคาในหน้านี้เป็นค่าประมาณ ถ้าได้ราคาจริงแล้ว แก้ราคาห้องได้ที่แท็บแก้ไขข้อมูล','Prices here are estimates. Once you have real prices, edit the room price in the Edit data tab.','此处价格为估算，获得真实价格后可在“编辑数据”页修改房价。','ここの価格は目安です。実際の価格が分かったら「データを編集」タブで客室料金を変更できます。','여기 가격은 추정치입니다. 실제 가격을 알게 되면 데이터 편집 탭에서 객실 가격을 수정하세요.'],
+['เฉลี่ยต่อคนต่อคืน','Average per person per night','每人每晚平均','1人1泊あたり平均','1인 1박 평균'],['เฉลี่ยต่อห้องต่อคืน','Average per room per night','每间房每晚平均','1室1泊あたり平均','1실 1박 평균'],['เฉลี่ยต่อคน','Average per person','人均','1人あたり平均','1인 평균'],
+['📅 ปรับราคาตามวันที่เดินทาง','📅 Prices adjusted for your travel dates','📅 按出行日期调整价格','📅 旅行日に合わせた価格調整','📅 여행 날짜에 따른 가격 조정'],['วันเดินทางผ่านไปแล้ว','Travel date has passed','出行日期已过','旅行日はすでに過ぎています','여행 날짜가 지났습니다'],
+['ตั๋วเครื่องบิน ×','Flights ×','机票 ×','航空券 ×','항공권 ×'],['ฤดูกาล ×','season ×','季节 ×','シーズン ×','시즌 ×'],['ช่วงเทศกาล ×','holiday ×','节假日 ×','祝祭日 ×','연휴 ×'],['จองล่วงหน้า ×','booking lead ×','提前预订 ×','事前予約 ×','사전 예약 ×'],['ที่พัก ×','stay ×','住宿 ×','宿泊 ×','숙박 ×'],
+['🏨 ราคาที่พักเฉลี่ย','🏨 Average accommodation price','🏨 住宿平均价格','🏨 宿泊の平均価格','🏨 숙소 평균 가격'],['ช่วงราคาห้องของ','Room price range for ','房价范围：','客室料金の範囲：','객실 가격 범위: '],['ประหยัด','Budget','经济','節約','절약'],['ปานกลาง','Mid-range','中档','標準','중간'],['สบาย','Comfort','舒适','快適','편안'],['บาทต่อห้องต่อคืน','THB per room per night','泰铢/间/晚','バーツ/室/泊','바트/실/박'],['(ยังไม่รวมการปรับตามวันที่)','(date adjustments not included)','（未含日期调整）','（日付による調整は含まず）','(날짜 조정 미포함)'],['รวม ','Total ','共 ','合計 ','총 '],
+['ค่าใช้จ่ายโดยประมาณ','Estimated costs','估算费用','概算費用','예상 비용'],['ตั๋วเครื่องบิน/คน','Flight/person','机票/人','航空券/人','항공권/인'],['ตั๋วเครื่องบิน','Flights','机票','航空券','항공권'],['ที่พัก (','Accommodation (','住宿（','宿泊（','숙소('],['อาหาร','Food','餐饮','食事','식비'],['เดินทางในประเทศ/คน/วัน','Local transport/person/day','国内交通/人/天','国内移動/人/日','국내 교통/인/일'],['เดินทางในประเทศ','Local transport','国内交通','国内移動','국내 교통'],['ค่าเข้าสถานที่/คน/วัน','Attraction fees/person/day','景点门票/人/天','入場料/人/日','입장료/인/일'],['ค่าเข้าสถานที่','Attraction fees','景点门票','入場料','입장료'],['ค่าวีซ่า/คน','Visa fee/person','签证费/人','ビザ代/人','비자 비용/인'],['ค่าวีซ่า','Visa fees','签证费','ビザ代','비자 비용'],['ประกันการเดินทาง','Travel insurance','旅行保险','旅行保険','여행 보험'],['ประกัน/คน/วัน','Insurance/person/day','保险/人/天','保険/人/日','보험/인/일'],['เงินสำรองฉุกเฉิน','Emergency reserve','应急备用金','緊急予備費','비상 예비비'],
+['เอกสารที่ควรตรวจสอบ','Documents to check','需要核查的文件','確認すべき書類','확인할 서류'],['ไม่ต้องขอวีซ่า','No visa required','免签','ビザ不要','비자 불필요'],['ต้องตรวจเงื่อนไข','Check conditions','需核查条件','条件を確認','조건 확인 필요'],['ต้องขอวีซ่า','Visa required','需要签证','ビザ必要','비자 필요'],
+['หนังสือเดินทาง (อายุคงเหลือตามที่ประเทศกำหนด)','Passport (validity as required by the country)','护照（有效期需符合该国要求）','パスポート（残存有効期間は国の規定による）','여권 (해당 국가 요구 유효기간)'],['วีซ่า / การอนุญาตเข้าประเทศ (ถ้าจำเป็น)','Visa / entry permit (if required)','签证 / 入境许可（如需要）','ビザ / 入国許可（必要な場合）','비자 / 입국 허가 (필요 시)'],['หลักฐานที่พัก','Proof of accommodation','住宿证明','宿泊証明','숙소 증빙'],['หลักฐานทางการเงิน (ถ้ากฎของประเทศกำหนด)','Proof of funds (if required by the country)','资金证明（如该国要求）','資金証明（国の規定がある場合）','자금 증빙 (해당 국가 규정 시)'],
+['ข้อมูลสำหรับวางแผนเบื้องต้น โปรดตรวจสอบข้อกำหนดล่าสุดจากสถานทูตหรือหน่วยงานทางการ','For initial planning only. Please check the latest requirements with the embassy or official authorities.','仅供初步规划，请向使领馆或官方机构核实最新要求。','初期計画用の情報です。最新の要件は大使館や公的機関でご確認ください。','초기 계획용 정보입니다. 최신 요건은 대사관이나 공식 기관에서 확인하세요.'],
+['ประเทศที่งบ','Countries within a budget of','预算范围内的国家：','予算で行ける国：','예산으로 갈 수 있는 나라:'],['ไปได้','','可前往','','가능'],['รวมเงินสำรอง 10% ค่าใช้จ่ายเป็นประมาณการ ไม่ใช่ราคาจริงแบบเรียลไทม์','Includes a 10% reserve. Costs are estimates, not real-time prices.','含 10% 备用金。费用为估算，并非实时价格。','予備費10%を含みます。費用は目安で、リアルタイム価格ではありません。','예비비 10% 포함. 비용은 추정치이며 실시간 가격이 아닙니다.'],['อยู่ในงบ','Within budget','在预算内','予算内','예산 내'],['เกินงบ','Over budget by','超出预算','予算超過','예산 초과'],['ไม่มีข้อมูลประเทศ','No country data','没有国家数据','国データがありません','국가 데이터가 없습니다'],
+['ยังไม่มีทริปที่บันทึก ไปที่แท็บวางแผนทริป แล้วกดบันทึกทริปนี้','No saved trips yet. Go to the Plan trip tab and press Save this trip.','还没有已保存的行程。请到“规划行程”页并点击“保存此行程”。','保存した旅行はまだありません。「旅行を計画」タブで「この旅行を保存」を押してください。','저장된 여행이 없습니다. 여행 계획 탭에서 이 여행 저장을 누르세요.'],[' / งบ ',' / budget ',' / 预算 ',' / 予算 ',' / 예산 '],['ประมาณ ','approx. ','约 ','約 ','약 '],['บาท/คน','THB/person','泰铢/人','バーツ/人','바트/인'],
+['ธง/อีโมจิ','Flag/emoji','旗帜/表情','国旗/絵文字','국기/이모지'],['ชื่อประเทศ','Country name','国家名称','国名','국가 이름'],['รหัสสนามบิน','Airport code','机场代码','空港コード','공항 코드'],['สถานะวีซ่า','Visa status','签证状态','ビザ状況','비자 상태'],['eSIM/คน','eSIM/person','eSIM/人','eSIM/人','eSIM/인'],['ที่พัก/ห้อง/คืน (','Stay/room/night (','住宿/间/晚（','宿泊/室/泊（','숙박/실/박('],['อาหาร/คน/วัน (','Food/person/day (','餐饮/人/天（','食事/人/日（','식비/인/일('],
+['จังหวัด/เมืองที่ให้เลือก (คั่นด้วยเครื่องหมายจุลภาค)','Selectable provinces/cities (comma-separated)','可选省份/城市（逗号分隔）','選択できる県・都市（カンマ区切り）','선택 가능한 지역/도시 (쉼표로 구분)'],['เอกสารเพิ่มเติม (คั่นด้วยเครื่องหมายจุลภาค)','Additional documents (comma-separated)','附加文件（逗号分隔）','追加書類（カンマ区切り）','추가 서류 (쉼표로 구분)'],['หมายเหตุ','Notes','备注','備考','메모'],['ลบประเทศนี้','Delete this country','删除此国家','この国を削除','이 국가 삭제'],['ประเทศใหม่','New country','新国家','新しい国','새 국가'],
+['ญี่ปุ่น','Japan','日本','日本','일본'],['เกาหลีใต้','South Korea','韩国','韓国','한국'],['เวียดนาม','Vietnam','越南','ベトナム','베트남'],['มาเลเซีย','Malaysia','马来西亚','マレーシア','말레이시아'],['สิงคโปร์','Singapore','新加坡','シンガポール','싱가포르'],['ไต้หวัน','Taiwan','台湾','台湾','대만'],['อินโดนีเซีย (บาหลี)','Indonesia (Bali)','印度尼西亚（巴厘岛）','インドネシア（バリ）','인도네시아(발리)'],['อินโดนีเซีย','Indonesia','印度尼西亚','インドネシア','인도네시아'],['ฮ่องกง','Hong Kong','香港','香港','홍콩'],['ยุโรป (เชงเก้น เช่น ฝรั่งเศส)','Europe (Schengen, e.g. France)','欧洲（申根区，如法国）','ヨーロッパ（シェンゲン圏、例：フランス）','유럽(솅겐, 예: 프랑스)'],['ออสเตรเลีย','Australia','澳大利亚','オーストラリア','호주'],
+['โตเกียว','Tokyo','东京','東京','도쿄'],['โอซาก้า','Osaka','大阪','大阪','오사카'],['เกียวโต','Kyoto','京都','京都','교토'],['นารา','Nara','奈良','奈良','나라'],['นาโกย่า','Nagoya','名古屋','名古屋','나고야'],['ฟุกุโอกะ','Fukuoka','福冈','福岡','후쿠오카'],['ฮอกไกโด (ซัปโปโร)','Hokkaido (Sapporo)','北海道（札幌）','北海道（札幌）','홋카이도(삿포로)'],['โอกินาว่า','Okinawa','冲绳','沖縄','오키나와'],['ฮิโรชิม่า','Hiroshima','广岛','広島','히로시마'],
+['โซล','Seoul','首尔','ソウル','서울'],['ปูซาน','Busan','釜山','釜山','부산'],['เชจู','Jeju','济州','済州','제주'],['อินช็อน','Incheon','仁川','仁川','인천'],['แทกู','Daegu','大邱','大邱','대구'],['คังนึง','Gangneung','江陵','江陵','강릉'],
+['กัวลาลัมเปอร์','Kuala Lumpur','吉隆坡','クアラルンプール','쿠알라룸푸르'],['ปีนัง','Penang','槟城','ペナン','페낭'],['มะละกา','Malacca','马六甲','マラッカ','말라카'],['ลังกาวี','Langkawi','兰卡威','ランカウイ','랑카위'],['โกตาคินาบาลู','Kota Kinabalu','亚庇','コタキナバル','코타키나발루'],['ยะโฮร์บาห์รู','Johor Bahru','新山','ジョホールバル','조호르바루'],
+['ผู้ถือหนังสือเดินทางไทยเข้าพักท่องเที่ยวได้ไม่เกิน 15 วันโดยไม่ต้องขอวีซ่า ตรวจเงื่อนไขล่าสุดก่อนเดินทาง','Thai passport holders can stay for tourism up to 15 days without a visa. Check the latest conditions before traveling.','持泰国护照者可免签入境旅游，停留最长 15 天。出行前请核实最新条件。','タイ国籍のパスポート保持者は、観光目的で最大15日間ビザなしで滞在できます。渡航前に最新の条件をご確認ください。','태국 여권 소지자는 관광 목적으로 최대 15일간 비자 없이 체류할 수 있습니다. 여행 전 최신 조건을 확인하세요.'],
+['ตรวจสอบเงื่อนไข K-ETA และการยกเว้นล่าสุด','Check the latest K-ETA requirements and exemptions','请核实最新的 K-ETA 要求和豁免情况','最新の K-ETA の要件と免除をご確認ください','최신 K-ETA 요건과 면제 여부를 확인하세요'],
+['ยกเว้นวีซ่าตามจำนวนวันที่ประเทศกำหนด','Visa-exempt for the number of days set by the country','免签期限按该国规定','ビザ免除（日数は国の規定による）','비자 면제 (일수는 해당 국가 규정에 따름)'],
+['ตรวจสอบข้อกำหนดการลงทะเบียนเข้าเมืองออนไลน์','Check the online arrival registration requirements','请核实在线入境登记要求','オンライン入国登録の要件をご確認ください','온라인 입국 등록 요건을 확인하세요'],
+['ค่าครองชีพสูงกว่าประเทศใกล้เคียง','Cost of living is higher than in neighboring countries','生活成本高于周边国家','周辺国より物価が高い','인근 국가보다 물가가 높음'],
+['นโยบายยกเว้นวีซ่าสำหรับคนไทยอาจมีการต่ออายุเป็นช่วง ๆ ควรตรวจสอบ','Visa exemption for Thais may be renewed periodically; please check','泰国公民的免签政策可能按阶段续期，请核实','タイ国籍者のビザ免除は期間ごとに更新される場合があります。ご確認ください','태국인 비자 면제는 기간별로 연장될 수 있으니 확인하세요'],
+['ยกเว้นวีซ่าซึ่งกันและกันตามระยะเวลาที่กำหนด','Mutual visa exemption for the stipulated period','在规定期限内互免签证','規定期間内の相互ビザ免除','정해진 기간 내 상호 비자 면제'],
+['อาจมีค่าธรรมเนียมเข้าประเทศหรือ e-VOA','An entry fee or e-VOA may apply','可能需缴纳入境费或办理 e-VOA','入国手数料または e-VOA が必要な場合があります','입국 수수료 또는 e-VOA가 필요할 수 있음'],
+['ที่พักราคาสูง','Accommodation is expensive','住宿价格较高','宿泊費が高い','숙박비가 비쌈'],
+['ต้องยื่นวีซ่าล่วงหน้า ควรเผื่อเวลาหลายสัปดาห์','A visa must be applied for in advance; allow several weeks','需提前申请签证，请预留数周时间','ビザは事前申請が必要です。数週間の余裕を見てください','비자를 사전에 신청해야 하며 몇 주의 여유를 두세요'],
+['ต้องขอวีซ่าผู้มาเยือน','A visitor visa is required','需要申请访客签证','訪問者ビザが必要','방문자 비자 필요'],
+['ตั๋วขากลับ','Return ticket','返程机票','帰りの航空券','귀국 항공권'],
+['ลงทะเบียน Visit Japan Web','Register on Visit Japan Web','在 Visit Japan Web 注册','Visit Japan Web に登録','Visit Japan Web 등록'],
+['K-ETA (ถ้ายังจำเป็น)','K-ETA (if still required)','K-ETA（如仍需要）','K-ETA（まだ必要な場合）','K-ETA (아직 필요한 경우)'],
+['ใบกรอกข้อมูลเข้าเมืองออนไลน์','Online arrival form','在线入境表格','オンライン入国カード','온라인 입국 신고서'],
+['MDAC (ถ้ากำหนด)','MDAC (if required)','MDAC（如要求）','MDAC（必要な場合）','MDAC (요구되는 경우)'],
+['ค่าธรรมเนียมเข้าประเทศ/ภาษีท่องเที่ยวบาหลี','Entry fee / Bali tourist tax','入境费 / 巴厘岛旅游税','入国手数料 / バリ観光税','입국 수수료 / 발리 관광세'],
+['หลักฐานการเงิน','Proof of funds','资金证明','資金証明','자금 증빙'],
+['ใบจองที่พัก','Accommodation booking','住宿预订单','宿泊予約確認書','숙소 예약 확인서'],
+['ตารางการเดินทาง','Travel itinerary','行程表','旅程表','여행 일정표'],
+['ประกันที่คุ้มครองตามเกณฑ์เชงเก้น','Insurance meeting Schengen requirements','符合申根要求的保险','シェンゲン基準を満たす保険','솅겐 기준 충족 보험'],
+['นัดหมายยื่นวีซ่า','Visa application appointment','签证申请预约','ビザ申請の予約','비자 신청 예약'],
+['หลักฐานการทำงาน/เรียน','Proof of employment / study','工作/学习证明','在職・在学証明','재직/재학 증명'],
+['แผนการเดินทาง','Travel plan','旅行计划','旅行計画','여행 계획'],
+['หรู','Luxury','豪华','高級','럭셔리'],['จีน','China','中国','中国','중국'],
+['ภาพประกอบเมืองทั้งหมดเป็นภาพวาดที่สร้างขึ้นเองด้วยโค้ด ไม่ได้ใช้ภาพของผู้อื่น','All city illustrations are drawn by code and do not use anyone else’s images.','所有城市插画均由代码绘制，未使用他人的图片。','すべての都市のイラストはコードで描いたもので、他人の画像は使用していません。','모든 도시 일러스트는 코드로 그려졌으며 다른 사람의 이미지를 사용하지 않았습니다.'],
+['บาท','THB','泰铢','バーツ','바트']
+];
+const RX=[
+[/อีก (\d+) วันจะถึงวันเดินทาง/g,'Departure in $1 days','距出发还有 $1 天','出発まであと $1 日','출발까지 $1일'],
+[/(\d[\d,]*) วัน/g,'$1 days','$1天','$1日間','$1일'],[/(\d+) คืน/g,'$1 nights','$1晚','$1泊','$1박'],[/(\d+) คน/g,'$1 people','$1人','$1人','$1명'],[/(\d+) ห้อง/g,'$1 room(s)','$1间房','$1室','$1실'],[/(\d+) เมือง/g,'$1 cities','$1个城市','$1都市','$1개 도시'],
+[/ ถึง /g,' to ',' 至 ',' ～ ',' ~ ']
+];
+const EXM=[{},{},{},{},{}],TXS=[[],[],[],[],[]];
+for(let i=1;i<5;i++){EX.forEach(r=>{EXM[i][r[0]]=r[i]});TXS[i]=TX.map(r=>[r[0],r[i]]).sort((a,b)=>b[0].length-a[0].length)}
+function tr(t){
+ if(!LGI)return t;const k=t.trim();
+ if(EXM[LGI][k]!==undefined)return t.replace(k,EXM[LGI][k]);
+ let r=t;for(const x of TXS[LGI])if(r.includes(x[0]))r=r.split(x[0]).join(x[1]);
+ for(const x of RX)r=r.replace(x[0],x[LGI]);return r;
+}
+function doNode(n){
+ const p=n.parentNode;if(p&&((p.closest&&p.closest('#lg'))||p.tagName=='TEXTAREA'))return;
+ const v=n.nodeValue;
+ if(n.__o!==undefined&&v===n.__t){const nv=LGI?tr(n.__o):n.__o;n.__t=nv;if(v!==nv)n.nodeValue=nv;return}
+ if(TH_RE.test(v)){n.__o=v;const nv=LGI?tr(v):v;n.__t=nv;if(nv!==v)n.nodeValue=nv}else if(n.__o!==undefined){delete n.__o}
+}
+function doAttr(e){
+ for(const a of ['placeholder','title','alt']){
+  const v=e.getAttribute(a);if(v==null)continue;e.__a=e.__a||{};const o=e.__a[a];
+  if(o&&o.t===v){const nv=LGI?tr(o.o):o.o;o.t=nv;if(v!==nv)e.setAttribute(a,nv)}
+  else if(TH_RE.test(v)){const nv=LGI?tr(v):v;e.__a[a]={o:v,t:nv};if(nv!==v)e.setAttribute(a,nv)}
+ }
+}
+function walk(n){
+ if(n.nodeType==3){doNode(n);return}
+ if(n.nodeType!=1||/^(SCRIPT|STYLE)$/.test(n.tagName))return;
+ doAttr(n);const w=document.createTreeWalker(n,NodeFilter.SHOW_ELEMENT|NodeFilter.SHOW_TEXT);let x;
+ while(x=w.nextNode()){if(x.nodeType==3)doNode(x);else if(!/^(SCRIPT|STYLE)$/.test(x.tagName))doAttr(x)}
+}
+new MutationObserver(ms=>{if(!LGI)return;for(const m of ms){if(m.type=='characterData')doNode(m.target);else m.addedNodes.forEach(walk)}}).observe(document.body,{childList:true,subtree:true,characterData:true});
+function setLang(i){
+ LGI=i;window.LGC=LGS[i][0];document.documentElement.lang=LGS[i][0];$('#lg').value=i;
+ try{localStorage.setItem('tp_lg',i)}catch(e){}
+ try{plan();find();pick();saved();edit();if(location.hash=='#prov'&&get(sel1))prov();updAlb();updHo();if(AUTH.mode)$('#who').textContent='👤 '+(AUTH.mode=='member'?AUTH.name+' (สมาชิก)':'ผู้เยี่ยมชม')}catch(e){}
+ walk(document.body);
+}
+$('#lg').innerHTML=LGS.map((l,i)=>'<option value="'+i+'">'+l[1]+'</option>').join('');
+$('#lg').onchange=()=>setLang(+$('#lg').value);
+setTimeout(()=>{let v=0;try{v=+localStorage.getItem('tp_lg')||0}catch(e){}if(v>0&&v<5)setLang(v)},0);
+const ILP={D:['#5aa9f2','#dcefff'],S:['#ff8f6b','#ffd9a3'],N:['#0b1b3f','#4a4aa0'],P:['#f3a0c4','#ffe3f0'],W:['#8fb0d6','#eaf2fb'],G:['#8fcdb4','#eaf7ef']};
+const ILD=[
+['ฮานอย','city','S','🛕','🏮'],['โฮจิมินห์','city','D','🏙️','🛵'],['ดานัง','sea','D','🌉','🏖️'],['ฮอยอัน','city','N','🏮','🛶'],['ฮาลอง','sea','G','⛵','🏝️'],['ดาลัด','hill','G','🌲','🏔️'],['เว้','hill','S','🏯','🪷'],['นาตรัง','sea','D','🏖️','🌴'],
+['ไทเป','city','D','🏙️','🧋'],['ไทจง','city','S','🌈','🏛️'],['ไถหนาน','hill','S','🏯','🌺'],['เกาสง','sea','S','🚢','🌉'],['ฮวาเหลียน','hill','G','⛰️','🌊'],['จิ่วเฟิ่น','city','N','🏮','🍵'],
+['ปักกิ่ง','hill','S','🏯','🐉'],['เซี่ยงไฮ้','city','N','🌃','🗼'],['เฉิงตู','hill','G','🐼','🎋'],['ซีอาน','city','S','🏯','🗿'],['กวางโจว','city','D','🗼','🌆'],['คุนหมิง','hill','P','🌸','🏞️'],['ฮาร์บิน','snow','W','⛄','❄️'],['จางเจียเจี้ย','hill','G','⛰️','🌫️'],
+['กูตา/เซมีนยัก','sea','S','🏄','🌅'],['อูบุด','terr','G','🌾','🌴'],['นูซาเปอนิดา','sea','D','🏝️','🐢'],['ยอร์กยาการ์ตา','hill','S','🛕','🌿'],['จาการ์ตา','city','D','🏙️','🕌'],['ลอมบอก','sea','S','🌋','🏖️'],
+['เกาะฮ่องกง','city','N','🌃','🏙️'],['เกาลูน','city','S','🌆','🚢'],['ลันเตา (ดิสนีย์แลนด์)','hill','G','🚠','🗿'],['มาเก๊า','city','N','🎰','🏛️'],
+['ปารีส','city','S','🗼','🥐'],['นีซ','sea','D','🏖️','🌴'],['ลียง','city','S','🏛️','🌉'],['มาร์เซย','sea','D','⛵','🏰'],['สตราสบูร์ก','hill','P','🏘️','⛪'],['โรม','city','S','🏛️','🍝'],['บาร์เซโลนา','sea','D','⛪','🌊'],['อัมสเตอร์ดัม','city','P','🚲','🌷'],['ซูริก','hill','W','🏔️','⛪'],
+['ซิดนีย์','sea','D','🌉','🎭'],['เมลเบิร์น','city','D','🚋','🏙️'],['บริสเบน','city','S','🌆','🌴'],['โกลด์โคสต์','sea','S','🏄','🏖️'],['เพิร์ธ','sea','S','🌅','🌊'],['แคนส์','sea','D','🐠','🏝️'],
+['คังนึง','sea','S','🌊','🏖️'],['ไนท์ซาฟารี','hill','N','🦁','🌳'],
+['โตเกียว','city','D','🗼','🏙️'],['โอซาก้า','city','N','🏯','🍜'],['เกียวโต','hill','S','⛩️','🍁'],['นารา','hill','G','🦌','🛕'],['นาโกย่า','hill','D','🏯','🍁'],['ฟุกุโอกะ','sea','D','🍜','🌉'],['ฮอกไกโด (ซัปโปโร)','snow','W','⛷️','❄️'],['โอกินาว่า','sea','D','🌺','🏖️'],['ฮิโรชิม่า','sea','S','⛩️','🌅'],
+['โซล','city','S','🗼','🏯'],['ปูซาน','sea','D','🌉','🏖️'],['เชจู','hill','G','🍊','🌊'],['อินช็อน','city','D','✈️','🏮'],['แทกู','hill','P','🗼','🌸'],
+['กัวลาลัมเปอร์','city','N','🏙️','🌃'],['ปีนัง','hill','G','🚠','🌴'],['มะละกา','city','S','🏰','🛺'],['ลังกาวี','sea','D','🦅','🏝️'],['โกตาคินาบาลู','sea','S','⛵','🌅'],['ยะโฮร์บาห์รู','city','D','🕌','🏙️'],
+['มารีน่าเบย์','city','N','🌃','🦁'],['เซ็นโตซา','sea','D','🎢','🏖️'],['ไชน่าทาวน์','city','S','🏮','🥢'],['ลิตเติ้ลอินเดีย','city','D','🛕','🌸']];
+function ill(g,pk,e1,e2,seed){
+ const night=pk=='N',c=ILP[pk];let r=seed;const R=()=>{r=(r*9301+49297)%233280;return r/233280},f=v=>v.toFixed(1);
+ let o='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280"><defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+c[0]+'"/><stop offset="1" stop-color="'+c[1]+'"/></linearGradient><radialGradient id="b"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect width="400" height="280" fill="url(#a)"/>';
+ if(night){for(let i=0;i<34;i++)o+='<circle cx="'+f(R()*400)+'" cy="'+f(R()*150)+'" r="'+f(R()*1.4+.4)+'" fill="#fff" opacity="'+f(R()*.6+.3)+'"/>';o+='<circle cx="320" cy="60" r="22" fill="#fff6d6"/><circle cx="330" cy="54" r="20" fill="'+c[0]+'"/>'}
+ else o+='<circle cx="310" cy="75" r="62" fill="url(#b)"/><circle cx="310" cy="75" r="24" fill="#fff4c2"/>';
+ const cl=(x,y,k)=>'<g fill="#fff" opacity="'+(night?.14:.75)+'"><ellipse cx="'+x+'" cy="'+y+'" rx="'+34*k+'" ry="'+10*k+'"/><ellipse cx="'+(x+18*k)+'" cy="'+(y-8*k)+'" rx="'+22*k+'" ry="'+10*k+'"/></g>';
+ o+=cl(70,60,1)+cl(190,38,.8)+cl(340,115,.7);
+ const dk=night?.45:0;
+ if(g=='sea'){
+  o+='<path d="M0 170 Q60 140 120 168 T250 160 T400 172 L400 190 L0 190Z" fill="'+(night?'#1f3d5c':'#4f8f8a')+'" opacity=".8"/><defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3aa6c8"/><stop offset="1" stop-color="#145d8c"/></linearGradient></defs><rect y="172" width="400" height="108" fill="url(#s)"/>';
+  for(let i=0;i<5;i++)o+='<path d="M0 '+(186+i*18)+' q25 -8 50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>';
+  o+='<path d="M0 280 L0 255 Q120 235 400 262 L400 280Z" fill="#f0d9a8" opacity=".95"/>';
+ }else if(g=='hill'){
+  o+='<path d="M0 190 Q70 110 150 185 T300 150 T400 185 L400 280 L0 280Z" fill="#6f9b86"/><path d="M0 215 Q90 150 190 210 T400 200 L400 280 L0 280Z" fill="#4c8466"/><path d="M0 245 Q110 205 220 240 T400 235 L400 280 L0 280Z" fill="#2f6a4d"/>';
+ }else if(g=='snow'){
+  o+='<path d="M0 190 Q90 130 190 190 T400 180 L400 280 L0 280Z" fill="#dce9f7"/><path d="M0 230 Q120 190 250 232 T400 225 L400 280 L0 280Z" fill="#fff"/>';
+  for(let i=0;i<40;i++)o+='<circle cx="'+f(R()*400)+'" cy="'+f(R()*280)+'" r="'+f(R()*2+1)+'" fill="#fff" opacity=".85"/>';
+ }else if(g=='terr'){
+  const cs=['#a7d06a','#86bb55','#69a645','#4f8f38','#3a762c'];
+  for(let i=0;i<5;i++)o+='<path d="M0 '+(170+i*26)+' Q100 '+(150+i*26)+' 200 '+(172+i*26)+' T400 '+(165+i*26)+' L400 280 L0 280Z" fill="'+cs[i]+'"/>';
+ }else{
+  for(let l=0;l<2;l++){let x=-10;const col=l?(night?'#10163a':'#2c3f6b'):(night?'#26307a':'#6f86b8');
+   while(x<410){const w=18+R()*18,h=(l?40:60)+R()*(l?70:80),y=250-h-(l?0:14);o+='<rect x="'+f(x)+'" y="'+f(y)+'" width="'+f(w)+'" height="'+f(h+14)+'" fill="'+col+'"/>';
+    if(night||l)for(let k=0;k<Math.floor(h/16);k++)if(R()>.45)o+='<rect x="'+f(x+4+R()*(w-10))+'" y="'+f(y+6+k*14)+'" width="3" height="4" fill="#ffe08a" opacity=".9"/>';x+=w+2}}
+  o+='<rect y="250" width="400" height="30" fill="'+(night?'#0a0e28':'#27365c')+'"/>';
+ }
+ if(dk)o+='<rect y="150" width="400" height="130" fill="#000" opacity="'+dk*.5+'"/>';
+ o+='<text x="170" y="222" font-size="104" text-anchor="middle">'+e1+'</text><text x="272" y="232" font-size="54" text-anchor="middle">'+e2+'</text></svg>';
+ return 'data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(o)));
+}
+ILD.forEach((d,i)=>{if(!PH[d[0]])PH[d[0]]=ill(d[1],d[2],d[3],d[4],i*977+13)});
+const MF={jp:[1.1,1,1.1,1.3,1.15,.9,.95,1.05,.95,1.05,1.2,1.15],kr:[1.05,.95,1.05,1.25,1.1,.95,1,1.1,1.05,1.15,1.1,1.05],vn:[1.15,1.1,1,1.05,.95,.9,.9,.9,.95,1,1.05,1.15],my:[1.1,1.05,1,1.05,1,.95,1,.95,.95,.95,1,1.15],sg:[1.1,1.05,1,1.05,1,1,1.05,1,.95,.95,1,1.15],tw:[1.15,1.05,1,1.1,1,.95,1.05,1.05,.95,1.1,1.1,1.1],cn:[1.2,1.1,1,1.05,1.2,1,1.05,1.1,.95,1.25,1,1.05],id:[1.1,.95,.95,1,1,1.15,1.3,1.3,1.1,1,.95,1.2],hk:[1.15,1.1,1,1.05,1,.95,1,1,.95,1.1,1.1,1.15],fr:[.85,.85,.95,1.05,1.1,1.2,1.35,1.35,1.15,1,.9,1.15],au:[1.3,1.1,1,1.15,1,1,1.1,1.05,1.05,1.05,1.1,1.35],def:[1.1,1,1,1.1,1,1,1.05,1.05,1,1,1.05,1.15]};
+function dts(){const a=$('#dd').value,b=$('#dr').value;if(!a||!b)return null;const A=new Date(a+'T00:00:00'),B=new Date(b+'T00:00:00');if(isNaN(A)||isNaN(B)||B<A)return null;return{A,B,d:Math.round((B-A)/864e5)+1}}
+const fd=d=>d.toLocaleDateString(({th:'th-TH',en:'en-GB',zh:'zh-CN',ja:'ja-JP',ko:'ko-KR'})[window.LGC||'th'],{day:'numeric',month:'short',year:'numeric'});
+const ys=d=>String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+function fac(c,o){
+ const D=o.D;if(!D)return{fl:1,hv:1,ld:1,sn:1,pk:1,n:0};
+ const M=MF[c.id]||MF.def,m=D.A.getMonth(),dy=D.A.getDate(),nt=Math.max(D.d-1,1);
+ const pk=((m==3&&dy>=9&&dy<=16)||(m==11&&dy>=26)||(m==0&&dy<=3))?1.12:1;
+ let hs=0;for(let i=0;i<nt;i++)hs+=M[new Date(D.A.getTime()+i*864e5).getMonth()];
+ const t=new Date();t.setHours(0,0,0,0);const n=Math.round((D.A-t)/864e5);
+ const ld=n<0?1:n<7?1.35:n<14?1.2:n<30?1.1:n<=90?1:.95;
+ return{fl:M[m]*pk*ld,hv:hs/nt*(n>=0&&n<7?1.1:1),ld,sn:M[m],pk,n};
+}
+(()=>{const f=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),t=new Date(),a=new Date(t.getTime()+60*864e5),b=new Date(a.getTime()+6*864e5);$('#dd').min=$('#dr').min=f(t);$('#dd').value=f(a);$('#dr').value=f(b)})();
+$('#dd').addEventListener('change',()=>{if($('#dr').value<$('#dd').value)$('#dr').value=$('#dd').value;$('#dr').min=$('#dd').value;plan()});
+hoOpts();updHo();
+alOpts();updAlb();
+let curBg='';
+function setBg(id){
+ id=SC[id]?id:'def';if(curBg===id)return;curBg=id;
+ const z=SC[id],el=$('#bg');let h='';
+ el.style.setProperty('--s1',z.s[0]);el.style.setProperty('--s2',z.s[1]);el.style.setProperty('--img',z.img?'url('+z.img+')':'none');el.className=(z.up?'up ':'')+(z.img?'im':'');
+ for(let i=0;i<16;i++)h+='<i class="pt" style="left:'+(i*37%100)+'%;font-size:'+(16+i%4*8)+'px;animation-duration:'+(9+i%7*2)+'s;animation-delay:-'+(i*1.3).toFixed(1)+'s">'+z.p[i%z.p.length]+'</i>';
+ (z.img?[]:z.f).forEach((e,i)=>{h+='<i class="fg" style="left:'+(6+i*40)+'%;font-size:'+(100+i*30)+'px;animation-delay:-'+i*2+'s">'+e+'</i>'});
+ h+='<i class="cl" style="top:10%">☁️</i><i class="cl" style="top:26%;animation-delay:-28s">☁️</i>';
+ el.innerHTML=h;
+}
+$('#pgrid').addEventListener('mouseover',e=>{const c=e.target.closest('[data-pc]');if(c)setBg(c.dataset.pc)});
+$('#pgrid').addEventListener('mouseleave',()=>setBg('def'));
+sel();plan();find();saved();edit();pick();show();
+let _o=null;try{_o=localStorage.getItem('tp_out')}catch(e){}
+if(!_o)tryLogin(true);
+if(!window.claude){AUTH.mode='guest';ready();$('#lo').hidden=true}
+</script>
+</body>
+</html>

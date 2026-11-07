@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://thironwilsan-cmd.github.io/travelplan/sitemap.xml
